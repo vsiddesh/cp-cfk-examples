@@ -16,8 +16,8 @@ spec:
         cpu: 500m
         memory: 512Mi
       requests:
-        cpu: 100m
-        memory: 256Mi
+        cpu: 400m
+        memory: 512Mi
 ---
 apiVersion: platform.confluent.io/v1beta1
 kind: Kafka
@@ -32,8 +32,8 @@ spec:
         cpu: 1
         memory: 1Gi
       requests:
-        cpu: 500m
-        memory: 256Mi
+        cpu: 1
+        memory: 1Gi
   image:
     application: confluentinc/cp-server:7.7.0
     init: confluentinc/confluent-init-container:2.9.0
@@ -55,10 +55,10 @@ spec:
     application: confluentinc/cp-enterprise-control-center:7.7.0
     init: confluentinc/confluent-init-container:2.9.0
   dataVolumeCapacity: 100Gi
-  externalAccess:
-    type: loadBalancer
-    loadBalancer: 
-      domain: test.io
+  # externalAccess:
+  #   type: loadBalancer
+  #   loadBalancer: 
+  #     domain: test.io
   dependencies:
     schemaRegistry:
       url: http://schemaregistry.confluent.svc.cluster.local:8081
@@ -74,8 +74,8 @@ spec:
         cpu: 1
         memory: 1Gi
       requests:
-        cpu: 500m
-        memory: 500Mi
+        cpu: 1
+        memory: 1Gi
 ---
 apiVersion: platform.confluent.io/v1beta1
 kind: SchemaRegistry
@@ -96,8 +96,8 @@ spec:
         cpu: 1
         memory: 512Mi
       requests:
-        cpu: 100m
-        memory: 256Mi
+        cpu: 1
+        memory: 512Mi
 ---
 apiVersion: platform.confluent.io/v1beta1
 kind: Connect
