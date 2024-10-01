@@ -1,0 +1,124 @@
+apiVersion: platform.confluent.io/v1beta1
+kind: Zookeeper
+metadata:
+  name: zookeeper
+  namespace: confluent
+spec:
+  replicas: 1
+  image:
+    application: confluentinc/cp-zookeeper:7.7.0
+    init: confluentinc/confluent-init-container:2.9.0
+  dataVolumeCapacity: 100Gi
+  logVolumeCapacity: 50Gi
+  podTemplate:
+    resources:
+      limits:
+        cpu: 500m
+        memory: 512Mi
+      requests:
+        cpu: 100m
+        memory: 256Mi
+---
+apiVersion: platform.confluent.io/v1beta1
+kind: Kafka
+metadata:
+  name: kafka
+  namespace: confluent
+spec:
+  replicas: 3
+  podTemplate:
+    resources:
+      limits:
+        cpu: 1
+        memory: 1Gi
+      requests:
+        cpu: 500m
+        memory: 256Mi
+  image:
+    application: confluentinc/cp-server:7.7.0
+    init: confluentinc/confluent-init-container:2.9.0
+  dataVolumeCapacity: 100Gi
+  dependencies:
+    zookeeper:
+      endpoint: zookeeper.confluent.svc.cluster.local:2181
+---
+apiVersion: platform.confluent.io/v1beta1
+kind: ControlCenter
+metadata:
+  name: controlcenter
+  namespace: confluent
+spec:
+  replicas: 1
+  image:
+    application: confluentinc/cp-enterprise-control-center:7.7.0
+    init: confluentinc/confluent-init-container:2.9.0
+  dataVolumeCapacity: 100Gi
+  dependencies:
+    schemaRegistry:
+      url: http://schemaregistry.confluent.svc.cluster.local:8081
+    ksqldb:
+    - name: ksql-dev
+      url: http://ksqldb.confluent.svc.cluster.local:8088
+    connect:
+    - name: connect-dev
+      url:  http://connect.confluent.svc.cluster.local:8083
+  podTemplate:
+    resources:
+      limits:
+        cpu: 1000m
+        memory: 1Gi
+      requests:
+        cpu: 500m
+        memory: 500Mi
+---
+apiVersion: platform.confluent.io/v1beta1
+kind: SchemaRegistry
+metadata:
+  name: schemaregistry
+  namespace: confluent
+spec:
+  replicas: 1
+  image:
+    application: confluentinc/cp-schema-registry:7.7.0
+    init: confluentinc/confluent-init-container:2.9.0
+  dependencies:
+    kafka:
+      bootstrapEndpoint: kafka:9071
+  podTemplate:
+    resources:
+      limits:
+        cpu: 500m
+        memory: 512Mi
+      requests:
+        cpu: 100m
+        memory: 256Mi
+---
+apiVersion: platform.confluent.io/v1beta1
+kind: Connect
+metadata:
+  name: connect
+  namespace: confluent
+spec:
+  replicas: 0
+  image:
+    application: confluentinc/cp-server-connect:7.7.0
+    init: confluentinc/confluent-init-container:2.9.0
+  dependencies:
+    kafka:
+      bootstrapEndpoint: kafka:9071
+  externalAccess:
+    type: loadBalancer
+    loadBalancer: 
+      domain: test.io
+  podTemplate:
+    resources:
+      limits:
+        cpu: 500m
+        memory: 512Mi
+      requests:
+        cpu: 100m
+        memory: 256Mi
+  
+
+
+
