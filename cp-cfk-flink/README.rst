@@ -52,7 +52,7 @@ Deploy Confluent for Kubernetes Flink Operator
       --namespace flink
 
      helm upgrade --install cp-flink-kubernetes-operator confluentinc/flink-kubernetes-operator -n flink \
-     --set "image.repository=siddeshvcflt/cp-flink2" --set "image.tag=1.8.0-cp1-operator" --set "imagePullSecrets={imgsecret}"
+     --set "image.repository=siddeshvcflt/cp-flink2" --set "image.tag=1.8.0-cp1-operator" --set "imagePullSecrets[0].name"=imgsecret
   
 #. Check that the Confluent For Apache Flink pod comes up and is running:
 
