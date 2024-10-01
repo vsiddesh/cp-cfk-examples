@@ -61,7 +61,7 @@ Deploy Confluent for Kubernetes Flink Operator
      kubectl get pods
 
 ========================================
-Deploy Flink Jobs
+ FlinkDeployment Job
 ========================================
 
 You install  Confluent Platform for Apache Flink component as custom resource (CRs). 
@@ -117,7 +117,7 @@ Deploy Apache Flink Jobs
      kubectl describe flinkdeployment
 
 ==================================================================
-Deploy Apache Flink Jobs for Privately Hosted Flink docker Images
+Deploy Apache Flink Jobs for Privately Hosted Flink Docker Images
 ==================================================================
 
 #. Create docker-regsitry secret for authentication to private docker repository.
