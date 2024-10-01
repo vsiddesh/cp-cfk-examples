@@ -1,10 +1,10 @@
-Deploy Confluent Flink 
-=========================
+Deploy Confluent Platform Flink 
+===============================
 
 
-===============================
-Deploy Confluent for Kubernetes
-===============================
+=====================================
+Deploy Confluent for Kubernetes Flink
+=====================================
 
 #. Create the namespace to use.
 
