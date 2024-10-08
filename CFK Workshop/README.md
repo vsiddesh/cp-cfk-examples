@@ -16,16 +16,15 @@ This workflow scenario assumes you are using the namespace `confluent`.
 
 1. Create the namespace to use.
 
-   :: 
-   
+```
       kubectl create namespace confluent
+```
 
 2. Set this namespace to default for your Kubernetes context.
 
-   :: 
-   
+   ```
       kubectl config set-context --current --namespace confluent
-
+   ```
 3. Set up the Helm Chart:
 
 ```
