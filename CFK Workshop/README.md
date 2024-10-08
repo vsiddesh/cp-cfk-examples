@@ -14,13 +14,25 @@ This playbook explains how to deploy KRaft brokers and controllers with CFK. Bef
 
 This workflow scenario assumes you are using the namespace `confluent`.
 
-1. Set up the Helm Chart:
+1. Create the namespace to use.
+
+   :: 
+   
+      kubectl create namespace confluent
+
+2. Set this namespace to default for your Kubernetes context.
+
+   :: 
+   
+      kubectl config set-context --current --namespace confluent
+
+3. Set up the Helm Chart:
 
 ```
 helm repo add confluentinc https://packages.confluent.io/helm
 ```
 
-2. Install Confluent For Kubernetes using Helm:
+4. Install Confluent For Kubernetes using Helm:
 
 ```
 helm upgrade --install operator confluentinc/confluent-for-kubernetes -n confluent --set kRaftEnabled=true
@@ -31,7 +43,7 @@ Make sure to deploy CFK with the `–-set kRaftEnabled=true` flag in the helm up
 - [Deploy CFK with KRaft](https://docs.confluent.io/operator/current/co-deploy-cfk.html#deploy-co-with-kraft)
                 
 
-3. Check that the Confluent For Kubernetes pod comes up and is running:
+5. Check that the Confluent For Kubernetes pod comes up and is running:
 
 ```
 kubectl get pods -n confluent
