@@ -1,0 +1,15 @@
+apiVersion: platform.confluent.io/v1beta1
+kind: KafkaRestClass
+metadata:
+  name: krc-cloud
+  namespace: confluent
+spec:
+  kafkaClusterRef:
+    name: kafka
+  kafkaRest:
+    endpoint: https://pkc-5w9qrq.us-east-2.aws.confluent.cloud:443
+    kafkaClusterID: lkc-9oqydy
+    authentication:
+      type: basic
+      basic:
+        secretRef: restclass-ccloud
