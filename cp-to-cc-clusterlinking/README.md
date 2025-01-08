@@ -19,7 +19,7 @@ In this example, CFK cluster is in SASL plain mode and the CCLOUD cluster is con
 ## Basic setup
 - Set the tutorial directory for this tutorial under the directory you downloaded
   the tutorial files:
-```
+
 export TUTORIAL_HOME=<Tutorial directory>/hybrid/clusterlink/ccloud-as-destination-cluster
 ```
 - Create a namespace `kubectl create ns confluent`
