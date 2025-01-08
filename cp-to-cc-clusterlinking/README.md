@@ -109,9 +109,6 @@ Cluster link will be created in the ccloud cluster.
 #### Create kafka.properties
     cat <<EOF > /tmp/kafka.properties
     bootstrap.servers=kafka.confluent.svc.cluster.local:9071
-    sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username=kafka password=kafka-secret;
-    security.protocol=SASL_PLAINTEXT
-    sasl.mechanism=PLAIN
     EOF
 
 #### Produce in source kafka cluster
