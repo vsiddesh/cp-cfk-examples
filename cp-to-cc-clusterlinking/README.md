@@ -23,21 +23,7 @@ In this example, CFK cluster is in SASL plain mode and the CCLOUD cluster is con
 export TUTORIAL_HOME=<Tutorial directory>/hybrid/clusterlink/ccloud-as-destination-cluster
 ```
 - Create a namespace `kubectl create ns confluent`
-- Create secret `ca-pair-sslcerts` for operator `kubectl  create secret tls  ca-pair-sslcerts --cert=../../certs/ca/ca.pem --key=../../certs/ca/ca-key.pem`
 
-- Generate a CA pair to use in this tutorial:
-```
-openssl genrsa -out $TUTORIAL_HOME/ca-key.pem 2048
-openssl req -new -key $TUTORIAL_HOME/ca-key.pem -x509 \
-  -days 1000 \
-  -out $TUTORIAL_HOME/ca.pem \
-  -subj "/C=US/ST=CA/L=MountainView/O=Confluent/OU=Operator/CN=TestCA"
-```
-Then, provide the certificate authority as a Kubernetes secret ca-pair-sslcerts
-```
-kubectl -n confluent create secret tls ca-pair-sslcerts \
-    --cert=$TUTORIAL_HOME/ca.pem \
-    --key=$TUTORIAL_HOME/ca-key.pem 
 ```
 - Deploy Confluent for Kubernetes (CFK)
 ```
