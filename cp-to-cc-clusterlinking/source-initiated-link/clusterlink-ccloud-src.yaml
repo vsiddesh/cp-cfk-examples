@@ -23,10 +23,5 @@ spec:
     kafkaRestClassRef:
       name: krc-cfk
       namespace: confluent
-    authentication:
-      type: plain
-      jaasConfig:
-        secretRef: credential
   mirrorTopics:
     - name: demo-topic
-    - name: test

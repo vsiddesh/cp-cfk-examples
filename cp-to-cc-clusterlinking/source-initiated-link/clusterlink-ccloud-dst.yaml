@@ -17,4 +17,3 @@ spec:
       namespace: confluent
   mirrorTopics:
     - name: demo-topic
-    - name: test

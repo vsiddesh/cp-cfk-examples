@@ -51,21 +51,6 @@ spec:
           port: 443
       tls:
         enabled: true
-    internal:
-      authentication:
-        type: plain
-        jaasConfig:
-          secretRef: credential
-  services:
-    kafkaRest:
-      authentication:
-        type: basic
-        basic:
-          secretRef: credential
-          roles:
-            - Administrators
-  passwordEncoder:
-    secretRef: password-encoder-secret
   configOverrides:
     jvm: 
       - "-Xmx512m"
@@ -94,10 +79,6 @@ spec:
   dependencies:
     kafka:
       bootstrapEndpoint: kafka.confluent.svc.cluster.local:9071
-      authentication:
-        type: plain
-        jaasConfig:
-          secretRef: credential
   # podTemplate:
   #   resources:
   #     limits:
@@ -135,10 +116,6 @@ spec:
   dependencies:
     kafka:
       bootstrapEndpoint: kafka.confluent.svc.cluster.local:9071
-      authentication:
-        type: plain
-        jaasConfig:
-          secretRef: credential
   configOverrides:
     jvm: 
       - "-Xmx512m"
@@ -159,10 +136,6 @@ spec:
   dependencies:
     kafka:
       bootstrapEndpoint: kafka.confluent.svc.cluster.local:9071
-      authentication:
-        type: plain
-        jaasConfig:
-          secretRef: credential
   # podTemplate:
   #   resources:
   #     limits:
@@ -215,17 +188,5 @@ spec:
     name: kafka
   kafkaRest:
     endpoint: http://kafka.confluent.svc.cluster.local:8090
-    authentication:
-      type: basic
-      basic:
-        secretRef: rest-credential
 ---
-apiVersion: platform.confluent.io/v1beta1
-kind: KafkaTopic
-metadata:
-  name: demo-topic
-  namespace: confluent
-spec:
-  kafkaRestClassRef:
-    name: krc-cfk
----
+
