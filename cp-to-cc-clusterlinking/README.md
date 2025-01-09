@@ -72,13 +72,6 @@ kubectl -n confluent create secret generic ccloud-tls-certs \
 ## CFK setup
 
 ### Create required secrets
-    kubectl -n confluent create secret generic credential \
-    --from-file=plain-users.json=$TUTORIAL_HOME/creds-kafka-sasl-users.json \
-    --from-file=plain.txt=$TUTORIAL_HOME/creds-client-kafka-sasl-user.txt \
-    --from-file=basic.txt=$TUTORIAL_HOME/creds-basic-users.txt
-
-    kubectl -n confluent create secret generic rest-credential \
-    --from-file=basic.txt=$TUTORIAL_HOME/rest-credential.txt
 
     kubectl -n confluent create secret generic password-encoder-secret \
     --from-file=password-encoder.txt=$TUTORIAL_HOME/passwordencoder.txt
