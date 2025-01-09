@@ -55,6 +55,8 @@ spec:
     jvm: 
       - "-Xmx512m"
       - "-Xms512m"
+  passwordEncoder:
+    secretRef: password-encoder-secret
   # podTemplate:
   #   resources:
   #     limits:
