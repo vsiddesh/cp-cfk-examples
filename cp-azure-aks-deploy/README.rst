@@ -5,9 +5,13 @@ To complete this scenario, you'll follow these steps:
 
 #. Create an Azure resource group.
 
-#. Deploy Azure AKS with System Nodepool.
+#. Deploy Azure AKS with system node pool.
 
-#. Deploy all nodepools for Confluent Platform components.
+#. Deploy all node pools for Confluent Platform components.
+
+#. Deploy Confluent For Kubernetes.
+
+#. Deploy Confluent Platform.
 
 #. Deploy the Producer application.
 
@@ -179,7 +183,7 @@ H. Confluent Manager for Apache Flink Operator node pool:
   --labels app-confluent=cmfoperator \
   --no-wait
 
-9. Flink Task manager node pool: 
+I. Flink Task manager node pool: 
 
 ::
    
@@ -212,30 +216,6 @@ J. Create Flink Job Manager node pool:
   --max-count 3 \
   --labels app-confluent=jobmanager \
   --no-wait
-
-
-
-==================================
-Create an Azure resource group.
-==================================
-
-Create a new resource group in the JioAzureWest region and create an AKS cluster with the system Nodepool.
-
-::
-   
-  az login
-  az group create --name rg-cp-poc-aks --location jioindiawest
-
-==================================
-Create an Azure resource group.
-==================================
-
-Create a new resource group in the JioAzureWest region and create an AKS cluster with the system Nodepool.
-
-::
-   
-  az login
-  az group create --name rg-cp-poc-aks --location jioindiawest
 
 ===============================
 Deploy Confluent for Kubernetes
@@ -283,34 +263,11 @@ tutorial, you will configure all components in a single file and deploy all
 components with one ``kubectl apply`` command.
 
 The entire Confluent Platform is configured in one configuration file:
-``$TUTORIAL_HOME/confluent-platform.yaml``
+``confluent-platform.yaml``
 
 In this configuration file, there is a custom Resource configuration spec for
 each Confluent Platform component - replicas, image to use, resource
 allocations.
-
-For example, the Kafka section of the file is as follows:
-
-::
-  
-  ---
-  apiVersion: platform.confluent.io/v1beta1
-  kind: Kafka
-  metadata:
-    name: kafka
-    namespace: confluent
-  spec:
-    replicas: 3
-    image:
-      application: confluentinc/cp-server:7.9.0
-      init: confluentinc/confluent-init-container:2.11.0
-    dataVolumeCapacity: 10Gi
-    metricReporter:
-      enabled: true
-    dependencies:
-      zookeeper:
-        endpoint: zookeeper.confluent.svc.cluster.local:2181
-  ---
   
 =========================
 Deploy Confluent Platform
@@ -320,14 +277,7 @@ Deploy Confluent Platform
 
    ::
 
-     kubectl apply -f $TUTORIAL_HOME/confluent-platform.yaml
-
-   Note: If you are deploying a single node dev cluster, then use this yaml file:
-
-   ::
-
-     kubectl apply -f $TUTORIAL_HOME/confluent-platform-singlenode.yaml
-     
+     kubectl apply -f confluent-platform.yaml
 
 #. Check that all Confluent Platform resources are deployed:
 
