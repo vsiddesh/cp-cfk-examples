@@ -26,6 +26,7 @@ Create an AKS cluster with the system Nodepool.
   --nodepool-taints CriticalAddonsOnly=true:NoSchedule \
   --no-wait
 
+
 Create CFK Operator node pool:
 
 ::
