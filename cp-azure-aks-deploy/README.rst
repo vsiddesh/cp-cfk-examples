@@ -60,8 +60,8 @@ A. Create CFK Operator node pool:
 ::
    
   az aks nodepool add \
-  --resource-group rg-jio-analytics-poc-sid\
-  --cluster-name cli-aks-jio-v2  \
+  --resource-group rg-cp-poc-aks\
+  --cluster-name aks-cp-poc  \
   --name cfkoperator \
   --node-count 1 \
   --node-vm-size Standard_D4as_v5 \
@@ -76,8 +76,8 @@ B. Create Kraft node pool:
 ::
    
   az aks nodepool add \
-  --resource-group rg-jio-analytics-poc-sid\
-  --cluster-name cli-aks-jio-v2  \
+  --resource-group rg-cp-poc-aks\
+  --cluster-name aks-cp-poc  \
   --name kraft \
   --node-count 3 \
   --node-vm-size Standard_D8as_v5 \
@@ -92,8 +92,8 @@ C. Create Kafka Broker node pool::
 ::
    
   az aks nodepool add \
-  --resource-group rg-jio-analytics-poc-sid\
-  --cluster-name cli-aks-jio-v2  \
+  --resource-group rg-cp-poc-aks\
+  --cluster-name aks-cp-poc  \
   --name kafka \
   --node-count 3 \
   --node-vm-size Standard_E32bds_v5 \
@@ -108,8 +108,8 @@ D. Create Schema Registry node pool:
 ::
    
   az aks nodepool add \
-  --resource-group rg-jio-analytics-poc-sid\
-  --cluster-name cli-aks-jio-v2  \
+  --resource-group rg-cp-poc-aks\
+  --cluster-name aks-cp-poc  \
   --name sr \
   --node-count 2 \
   --node-vm-size Standard_D4as_v5 \
@@ -124,8 +124,8 @@ E. Create Connect node pool:
 ::
    
   az aks nodepool add \
-  --resource-group rg-jio-analytics-poc-sid\
-  --cluster-name cli-aks-jio-v2  \
+  --resource-group rg-cp-poc-aks\
+  --cluster-name aks-cp-poc  \
   --name connect \
   --node-count 2 \
   --node-vm-size Standard_D8as_v5 \
@@ -140,8 +140,8 @@ F. Create Control Center node pool:
 ::
    
   az aks nodepool add \
-  --resource-group rg-jio-analytics-poc-sid\
-  --cluster-name cli-aks-jio-v2  \
+  --resource-group rg-cp-poc-aks\
+  --cluster-name aks-cp-poc  \
   --name c3 \
   --node-count 1 \
   --node-vm-size Standard_E16as_v5 \
@@ -156,8 +156,8 @@ G. Flink Kubernetes Operator node pool:
 ::
    
   az aks nodepool add \
-  --resource-group rg-jio-analytics-poc-sid\
-  --cluster-name cli-aks-jio-v2  \
+  --resource-group rg-cp-poc-aks\
+  --cluster-name aks-cp-poc  \
   --name flinkop \
   --node-count 1 \
   --node-vm-size Standard_D4as_v5 \
@@ -172,8 +172,8 @@ H. Confluent Manager for Apache Flink Operator node pool:
 ::
    
   az aks nodepool add \
-  --resource-group rg-jio-analytics-poc-sid\
-  --cluster-name cli-aks-jio-v2  \
+  --resource-group rg-cp-poc-aks\
+  --cluster-name aks-cp-poc  \
   --name cmfoperator \
   --node-count 1 \
   --node-vm-size Standard_D4as_v5 \
@@ -188,8 +188,8 @@ I. Flink Task manager node pool:
 ::
    
   az aks nodepool add \
-  --resource-group rg-jio-analytics-poc-sid\
-  --cluster-name cli-aks-jio-v2  \
+  --resource-group rg-cp-poc-aks\
+  --cluster-name aks-cp-poc  \
   --name taskmanager \
   --node-count 4 \
   --node-vm-size Standard_E32bds_v5 \
@@ -205,8 +205,8 @@ J. Create Flink Job Manager node pool:
 ::
    
   az aks nodepool add \
-  --resource-group rg-jio-analytics-poc-sid\
-  --cluster-name cli-aks-jio-v2  \
+  --resource-group rg-cp-poc-aks\
+  --cluster-name aks-cp-poc  \
   --name jobmanager \
   --node-count 2 \
   --node-vm-size Standard_E16bds_v5 \
@@ -273,6 +273,11 @@ allocations.
 Deploy Confluent Platform
 =========================
 
+#. Replace Kubernetes Node host/ domain in Confluent Platform 
+   ::
+
+     Replace "<NODEIP/HOST>" with the k8s host domain / ip address of the node.
+
 #. Deploy Confluent Platform with the above configuration:
 
    ::
@@ -283,7 +288,7 @@ Deploy Confluent Platform
 
    ::
    
-     kubectl get confluent
+     kubectl get pods
 
 #. Get the status of any component. For example, to check Kafka:
 
@@ -294,44 +299,44 @@ Deploy Confluent Platform
 ========
 Validate
 ========
+Create an Azure VM to validate producers and consumers.
 
-Deploy producer application
+Run producer application CLI
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Now that we've got the infrastructure set up, let's deploy the producer client
-app.
+Now that we've got the infrastructure set up, let's deploy the producer client.
 
-The producer app is packaged and deployed as a pod on Kubernetes. The required
-topic is defined as a KafkaTopic custom resource in
-``$TUTORIAL_HOME/producer-app-data.yaml``.
-
-The ``$TUTORIAL_HOME/producer-app-data.yaml`` defines the ``elastic-0``
-topic as follows:
+Install confluent cli utility to create topics and test the production & consumption of messages. 
 
 ::
 
-  apiVersion: platform.confluent.io/v1beta1
-  kind: KafkaTopic
-  metadata:
-    name: elastic-0
-    namespace: confluent
-  spec:
-    replicas: 3 # change to 1 if using single node
-    partitionCount: 1
-    configs:
-      cleanup.policy: "delete"
+  curl -O https://packages.confluent.io/archive/7.9/confluent-7.9.0.tar.gz
+  tar xzf confluent-7.9.0.tar.gz
+
+  export CONFLUENT_HOME=~/confluent-7.9.0
+
+  export PATH=$PATH:$CONFLUENT_HOME/bin
+
+  sudo apt install default-jre
+
       
-Deploy the producer app:
+Create topics using cli:
 
 ::
    
-   kubectl apply -f $TUTORIAL_HOME/producer-app-data.yaml
+   kafka-topics --create --bootstrap-server <NODEIP/HOST>:30000  --topic test-topic
 
-Note: If you are deploying a single node dev cluster, then use this yaml file:
+Produce using kafka-console-cli:
 
 ::
-  
-  kubectl apply -f $TUTORIAL_HOME/producer-app-data-singlenode.yaml
+   
+   kafka-console-producer --bootstrap-server <NODEIP/HOST>:30000 --topic test-topic
+
+Consume using kafka-console-cli:
+
+::
+   
+   kafka-console-consumer --bootstrap-server <NODEIP/HOST>:30000 --topic test-topic --from-beginning
 
 Validate in Control Center
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -350,7 +355,7 @@ Use Control Center to monitor the Confluent Platform, and see the created topic 
    
      http://localhost:9021
 
-#. Check that the ``elastic-0`` topic was created and that messages are being produced to the topic.
+#. Check that the ``test-topic`` topic was created and that messages are being produced to the topic.
 
 =========
 Tear Down
