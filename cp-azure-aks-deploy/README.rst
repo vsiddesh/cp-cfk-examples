@@ -1,129 +1,20 @@
-===============================
-Create Azure AKS Cluster and Nodepools
-===============================
-
-#. Create a new resource group in the JioAzureWest region 
-
-   :: 
-   
-      az login 
-      az group create --name rg-cp-poc-aks --location jioindiawest
-
-#. Create an AKS cluster with the system Nodepool.
-
-   :: 
-   
-      az aks create \
-      --resource-group rg-cp-poc-aks\
-      --name aks-cp-poc  \
-      --location jioindiawest \
-      --node-count 2 \
-      --node-vm-size Standard_D8ds_v5 \
-      --generate-ssh-keys \
-      --nodepool-name agentpool \
-      --enable-cluster-autoscaler \
-      --min-count 2 \
-      --max-count 5 \
-      --kubernetes-version 1.31.6 \
-      --nodepool-taints CriticalAddonsOnly=true:NoSchedule \
-      --no-wait
-
-#. Create CFK Operator node pool:
-
-   ::
-
-     az aks create \
-      --resource-group rg-cp-poc-aks\
-      --name aks-cp-poc  \
-      --location jioindiawest \
-      --node-count 2 \
-      --node-vm-size Standard_D8ds_v5 \
-      --generate-ssh-keys \
-      --nodepool-name agentpool \
-      --enable-cluster-autoscaler \
-      --min-count 2 \
-      --max-count 5 \
-      --kubernetes-version 1.31.6 \
-      --nodepool-taints CriticalAddonsOnly=true:NoSchedule \
-      --no-wait
-
-
-#. Install Confluent For Kubernetes using Helm:
-
-   ::
-
-     helm upgrade --install confluent-operator confluentinc/confluent-for-kubernetes --namespace confluent
-  
-#. Check that the Confluent For Kubernetes pod comes up and is running:
-
-   ::
-     
-     kubectl get pods
-
-
-===
-
-=========================
-
-
-
-::
-  
-
-
-
-
-::
-  
-
-
-
-
-::
-  
-
-The goal for this scenario is for you to:
-
-* Quickly set up the complete Confluent Platform on the Kubernetes.
-* Configure a producer to generate sample data.
-
-To complete this scenario, you'll follow these steps:
-
-#. Set the current tutorial directory.
-
-#. Deploy Confluent For Kubernetes.
-
-#. Deploy Confluent Platform.
-
-#. Deploy the Producer application.
-
-#. Tear down Confluent Platform.
-
 Deploy Confluent Platform
 =========================
 
-In this workflow scenario, you'll set up a simple non-secure (no authn, authz or
-encryption) Confluent Platform, consisting of all components.
-
-The goal for this scenario is for you to:
-
-* Quickly set up the complete Confluent Platform on the Kubernetes.
-* Configure a producer to generate sample data.
-
 To complete this scenario, you'll follow these steps:
 
-#. Set the current tutorial directory.
+#. Create an Azure resource group.
 
-#. Deploy Confluent For Kubernetes.
+#. Deploy Azure AKS with System Nodepool.
 
-#. Deploy Confluent Platform.
+#. Deploy all Nodepools for Confluent Platform components.
 
 #. Deploy the Producer application.
 
 #. Tear down Confluent Platform.
 
 ==================================
-Set the current tutorial directory
+Create an Azure resource group.
 ==================================
 
 Set the tutorial directory for this tutorial under the directory you downloaded
