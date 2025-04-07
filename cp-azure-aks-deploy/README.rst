@@ -179,7 +179,7 @@ H. Confluent Manager for Apache Flink Operator node pool:
   --labels app-confluent=cmfoperator \
   --no-wait
 
-10. Flink Task manager node pool: 
+9. Flink Task manager node pool: 
 
 ::
    
