@@ -67,7 +67,7 @@ A. Create CFK Operator node pool:
   --labels app-confluent=cfkoperator \
   --no-wait
 
-A. Create Kraft node pool:
+B. Create Kraft node pool:
 
 ::
    
@@ -81,6 +81,136 @@ A. Create Kraft node pool:
   --min-count 3 \
   --max-count 4 \
   --labels app-confluent=kraft \
+  --no-wait
+
+C. Create Kafka Broker node pool::
+
+::
+   
+  az aks nodepool add \
+  --resource-group rg-jio-analytics-poc-sid\
+  --cluster-name cli-aks-jio-v2  \
+  --name kafka \
+  --node-count 3 \
+  --node-vm-size Standard_E32bds_v5 \
+  --enable-cluster-autoscaler \
+  --min-count 3 \
+  --max-count 4 \
+  --labels app-confluent=kafka-broker \
+  --no-wait
+
+D. Create Schema Registry node pool:
+
+::
+   
+  az aks nodepool add \
+  --resource-group rg-jio-analytics-poc-sid\
+  --cluster-name cli-aks-jio-v2  \
+  --name sr \
+  --node-count 2 \
+  --node-vm-size Standard_D4as_v5 \
+  --enable-cluster-autoscaler \
+  --min-count 2 \
+  --max-count 3 \
+  --labels app-confluent=sr \
+  --no-wait
+
+E. Create Connect node pool:
+
+::
+   
+  az aks nodepool add \
+  --resource-group rg-jio-analytics-poc-sid\
+  --cluster-name cli-aks-jio-v2  \
+  --name connect \
+  --node-count 2 \
+  --node-vm-size Standard_D8as_v5 \
+  --enable-cluster-autoscaler \
+  --min-count 2 \
+  --max-count 3 \
+  --labels app-confluent=connect \
+  --no-wait
+
+F. Create Control Center node pool:
+
+::
+   
+  az aks nodepool add \
+  --resource-group rg-jio-analytics-poc-sid\
+  --cluster-name cli-aks-jio-v2  \
+  --name c3 \
+  --node-count 1 \
+  --node-vm-size Standard_E16as_v5 \
+  --enable-cluster-autoscaler \
+  --min-count 1 \
+  --max-count 2 \
+  --labels app-confluent=c3 \
+  --no-wait
+
+G. Flink Kubernetes Operator node pool:
+
+::
+   
+  az aks nodepool add \
+  --resource-group rg-jio-analytics-poc-sid\
+  --cluster-name cli-aks-jio-v2  \
+  --name flinkop \
+  --node-count 1 \
+  --node-vm-size Standard_D4as_v5 \
+  --enable-cluster-autoscaler \
+  --min-count 1 \
+  --max-count 2 \
+  --labels app-confluent=flinkoperator \
+  --no-wait
+
+H. Confluent Manager for Apache Flink Operator node pool:
+
+::
+   
+  az aks nodepool add \
+  --resource-group rg-jio-analytics-poc-sid\
+  --cluster-name cli-aks-jio-v2  \
+  --name cmfoperator \
+  --node-count 1 \
+  --node-vm-size Standard_D4as_v5 \
+  --enable-cluster-autoscaler \
+  --min-count 1 \
+  --max-count 2 \
+  --labels app-confluent=cmfoperator \
+  --no-wait
+
+I. Flink Task manager node pool: 
+
+::
+   
+  az aks nodepool add \
+  --resource-group rg-jio-analytics-poc-sid\
+  --cluster-name cli-aks-jio-v2  \
+  --name taskmanager \
+  --node-count 4 \
+  --node-vm-size Standard_E32bds_v5 \
+  --node-osdisk-type Ephemeral \
+  --enable-cluster-autoscaler \
+  --min-count 4 \
+  --max-count 5 \
+  --labels app-confluent=taskmanager \
+  --no-wait
+
+J. Create Flink Job Manager node pool:
+
+::
+   
+  az aks nodepool add \
+  --resource-group rg-jio-analytics-poc-sid\
+  --cluster-name cli-aks-jio-v2  \
+  --name jobmanager \
+  --node-count 2 \
+  --node-vm-size Standard_E16bds_v5 \
+  --node-osdisk-type Ephemeral \
+  --enable-cluster-autoscaler \
+  --min-count 2 \
+  --max-count 3 \
+  --labels app-confluent=jobmanager \
   --no-wait
 
 
