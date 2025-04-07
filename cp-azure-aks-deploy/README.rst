@@ -17,12 +17,12 @@ To complete this scenario, you'll follow these steps:
 Create an Azure resource group.
 ==================================
 
-Set the tutorial directory for this tutorial under the directory you downloaded
-the tutorial files:
+Create a new resource group in the JioAzureWest region and create an AKS cluster with the system Nodepool.
 
 ::
    
-  export TUTORIAL_HOME=<Tutorial directory>/quickstart-deploy
+  az login
+  az group create --name rg-cp-poc-aks --location jioindiawest
 
 ===============================
 Deploy Confluent for Kubernetes
