@@ -7,11 +7,94 @@ To complete this scenario, you'll follow these steps:
 
 #. Deploy Azure AKS with System Nodepool.
 
-#. Deploy all Nodepools for Confluent Platform components.
+#. Deploy all nodepools for Confluent Platform components.
 
 #. Deploy the Producer application.
 
 #. Tear down Confluent Platform.
+
+==================================
+Create an Azure resource group.
+==================================
+
+Create a new resource group in the JioAzureWest region and create an AKS cluster with the system Nodepool.
+
+::
+   
+  az login
+  az group create --name rg-cp-poc-aks --location jioindiawest
+
+==================================
+Deploy Azure AKS with System Nodepool.
+==================================
+
+Create an AKS cluster with the system Nodepool.
+
+::
+   
+  az aks create \
+  --resource-group rg-cp-poc-aks\
+  --name aks-cp-poc  \
+  --location jioindiawest \
+  --node-count 2 \
+  --node-vm-size Standard_D8ds_v5 \
+  --generate-ssh-keys \
+  --nodepool-name agentpool \
+  --enable-cluster-autoscaler \
+  --min-count 2 \
+  --max-count 5 \
+  --kubernetes-version 1.31.6 \
+  --nodepool-taints CriticalAddonsOnly=true:NoSchedule \
+  --no-wait
+
+==================================
+Deploy all nodepools for Confluent Platform components.
+==================================
+
+A. Create CFK Operator node pool:
+
+::
+   
+  az aks nodepool add \
+  --resource-group rg-jio-analytics-poc-sid\
+  --cluster-name cli-aks-jio-v2  \
+  --name cfkoperator \
+  --node-count 1 \
+  --node-vm-size Standard_D4as_v5 \
+  --enable-cluster-autoscaler \
+  --min-count 1 \
+  --max-count 2 \
+  --labels app-confluent=cfkoperator \
+  --no-wait
+
+A. Create Kraft node pool:
+
+::
+   
+  az aks nodepool add \
+  --resource-group rg-jio-analytics-poc-sid\
+  --cluster-name cli-aks-jio-v2  \
+  --name kraft \
+  --node-count 3 \
+  --node-vm-size Standard_D8as_v5 \
+  --enable-cluster-autoscaler \
+  --min-count 3 \
+  --max-count 4 \
+  --labels app-confluent=kraft \
+  --no-wait
+
+
+
+==================================
+Create an Azure resource group.
+==================================
+
+Create a new resource group in the JioAzureWest region and create an AKS cluster with the system Nodepool.
+
+::
+   
+  az login
+  az group create --name rg-cp-poc-aks --location jioindiawest
 
 ==================================
 Create an Azure resource group.
