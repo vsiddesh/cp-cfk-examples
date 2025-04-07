@@ -301,8 +301,8 @@ Validate
 ========
 Create an Azure VM to validate producers and consumers.
 
-Run producer application CLI
-^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Run producer application CLI on Azure VM
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Now that we've got the infrastructure set up, let's deploy the producer client.
 
