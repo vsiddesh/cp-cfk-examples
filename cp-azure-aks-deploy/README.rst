@@ -49,7 +49,8 @@ Create an AKS cluster with the system Nodepool.
   --max-count 5 \
   --kubernetes-version 1.31.6 \
   --nodepool-taints CriticalAddonsOnly=true:NoSchedule \
-  --no-wait
+  --no-wait \ 
+  --enable-private-cluster 
 
 ==================================
 Deploy all nodepools for Confluent Platform components.
