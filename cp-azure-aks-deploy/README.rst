@@ -37,7 +37,7 @@ Create an AKS cluster with the system Nodepool.
 ::
    
   az aks create \
-  --resource-group rg-cp-poc-aks\
+  --resource-group rg-cp-poc-aks \
   --name aks-cp-poc  \
   --location jioindiawest \
   --node-count 2 \
@@ -60,7 +60,7 @@ A. Create CFK Operator node pool:
 ::
    
   az aks nodepool add \
-  --resource-group rg-cp-poc-aks\
+  --resource-group rg-cp-poc-aks \
   --cluster-name aks-cp-poc  \
   --name cfkoperator \
   --node-count 1 \
@@ -76,7 +76,7 @@ B. Create Kraft node pool:
 ::
    
   az aks nodepool add \
-  --resource-group rg-cp-poc-aks\
+  --resource-group rg-cp-poc-aks \
   --cluster-name aks-cp-poc  \
   --name kraft \
   --node-count 3 \
@@ -92,7 +92,7 @@ C. Create Kafka Broker node pool::
 ::
    
   az aks nodepool add \
-  --resource-group rg-cp-poc-aks\
+  --resource-group rg-cp-poc-aks \
   --cluster-name aks-cp-poc  \
   --name kafka \
   --node-count 3 \
@@ -108,7 +108,7 @@ D. Create Schema Registry node pool:
 ::
    
   az aks nodepool add \
-  --resource-group rg-cp-poc-aks\
+  --resource-group rg-cp-poc-aks \
   --cluster-name aks-cp-poc  \
   --name sr \
   --node-count 2 \
@@ -124,7 +124,7 @@ E. Create Connect node pool:
 ::
    
   az aks nodepool add \
-  --resource-group rg-cp-poc-aks\
+  --resource-group rg-cp-poc-aks \
   --cluster-name aks-cp-poc  \
   --name connect \
   --node-count 2 \
@@ -140,7 +140,7 @@ F. Create Control Center node pool:
 ::
    
   az aks nodepool add \
-  --resource-group rg-cp-poc-aks\
+  --resource-group rg-cp-poc-aks \
   --cluster-name aks-cp-poc  \
   --name c3 \
   --node-count 1 \
@@ -156,7 +156,7 @@ G. Flink Kubernetes Operator node pool:
 ::
    
   az aks nodepool add \
-  --resource-group rg-cp-poc-aks\
+  --resource-group rg-cp-poc-aks \
   --cluster-name aks-cp-poc  \
   --name flinkop \
   --node-count 1 \
@@ -172,7 +172,7 @@ H. Confluent Manager for Apache Flink Operator node pool:
 ::
    
   az aks nodepool add \
-  --resource-group rg-cp-poc-aks\
+  --resource-group rg-cp-poc-aks \
   --cluster-name aks-cp-poc  \
   --name cmfoperator \
   --node-count 1 \
@@ -188,7 +188,7 @@ I. Flink Task manager node pool:
 ::
    
   az aks nodepool add \
-  --resource-group rg-cp-poc-aks\
+  --resource-group rg-cp-poc-aks \
   --cluster-name aks-cp-poc  \
   --name taskmanager \
   --node-count 4 \
