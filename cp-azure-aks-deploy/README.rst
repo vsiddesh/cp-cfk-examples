@@ -1,5 +1,5 @@
-Deploy Confluent Platform
-=========================
+Deploy Confluent Platform on Azure AKS
+======================================
 
 To complete this scenario, you'll follow these steps:
 
@@ -276,7 +276,7 @@ Deploy Confluent Platform
 #. Replace Kubernetes Node host/ domain in Confluent Platform 
    ::
 
-     Replace "<NODEIP/HOST>" with the k8s host domain / ip address of the node.
+     Replace "<NODEIP/HOST>" with the node's k8s host domain / ip address.
 
 #. Deploy Confluent Platform with the above configuration:
 
@@ -311,6 +311,7 @@ Install confluent cli utility to create topics and test the production & consump
 ::
 
   curl -O https://packages.confluent.io/archive/7.9/confluent-7.9.0.tar.gz
+
   tar xzf confluent-7.9.0.tar.gz
 
   export CONFLUENT_HOME=~/confluent-7.9.0
@@ -365,11 +366,7 @@ Shut down Confluent Platform and the data:
 
 ::
 
-  kubectl delete -f $TUTORIAL_HOME/producer-app-data.yaml
-
-::
-
-  kubectl delete -f $TUTORIAL_HOME/confluent-platform.yaml
+  kubectl delete -f confluent-platform.yaml
 
 ::
 
