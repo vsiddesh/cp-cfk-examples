@@ -9,11 +9,11 @@ To complete this scenario, you'll follow these steps:
 
 #. Deploy all node pools for Confluent Platform components.
 
-#. Deploy Confluent For Kubernetes.
+#. Deploy Confluent For Kubernetes Operator.
 
 #. Deploy Confluent Platform.
 
-#. Deploy the Producer application.
+#. Run the Producer & Consumer.
 
 #. Tear down Confluent Platform.
 
