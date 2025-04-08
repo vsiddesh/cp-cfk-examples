@@ -1,16 +1,41 @@
-Create Azure AKS Cluster and Nodepools
-=========================
+Deploy Confluent Platform on Azure AKS
+======================================
 
-Create a new resource group in the JioAzureWest region 
+To complete this scenario, you'll follow these steps:
+
+#. Create an Azure resource group.
+
+#. Deploy Azure AKS with system node pool.
+
+#. Deploy all node pools for Confluent Platform components.
+
+#. Deploy Confluent For Kubernetes Operator.
+
+#. Deploy Confluent Platform.
+
+#. Run the Producer & Consumer.
+
+#. Tear down Confluent Platform.
+
+==================================
+Create an Azure resource group.
+==================================
+
+Create a new resource group in the JioAzureWest region and create an AKS cluster with the system Nodepool.
 
 ::
-  az login 
+   
+  az login
   az group create --name rg-cp-poc-aks --location jioindiawest
 
+==================================
+Deploy Azure AKS with System Nodepool.
+==================================
 
 Create an AKS cluster with the system Nodepool.
 
 ::
+   
   az aks create \
   --resource-group rg-cp-poc-aks\
   --name aks-cp-poc  \
@@ -26,75 +51,171 @@ Create an AKS cluster with the system Nodepool.
   --nodepool-taints CriticalAddonsOnly=true:NoSchedule \
   --no-wait
 
-
-Create CFK Operator node pool:
-
-::
-  az aks create \
-  --resource-group rg-cp-poc-aks\
-  --name aks-cp-poc  \
-  --location jioindiawest \
-  --node-count 2 \
-  --node-vm-size Standard_D8ds_v5 \
-  --generate-ssh-keys \
-  --nodepool-name agentpool \
-  --enable-cluster-autoscaler \
-  --min-count 2 \
-  --max-count 5 \
-  --kubernetes-version 1.31.6 \
-  --nodepool-taints CriticalAddonsOnly=true:NoSchedule \
-  --no-wait
-
-The goal for this scenario is for you to:
-
-* Quickly set up the complete Confluent Platform on the Kubernetes.
-* Configure a producer to generate sample data.
-
-To complete this scenario, you'll follow these steps:
-
-#. Set the current tutorial directory.
-
-#. Deploy Confluent For Kubernetes.
-
-#. Deploy Confluent Platform.
-
-#. Deploy the Producer application.
-
-#. Tear down Confluent Platform.
-
-Deploy Confluent Platform
-=========================
-
-In this workflow scenario, you'll set up a simple non-secure (no authn, authz or
-encryption) Confluent Platform, consisting of all components.
-
-The goal for this scenario is for you to:
-
-* Quickly set up the complete Confluent Platform on the Kubernetes.
-* Configure a producer to generate sample data.
-
-To complete this scenario, you'll follow these steps:
-
-#. Set the current tutorial directory.
-
-#. Deploy Confluent For Kubernetes.
-
-#. Deploy Confluent Platform.
-
-#. Deploy the Producer application.
-
-#. Tear down Confluent Platform.
-
 ==================================
-Set the current tutorial directory
+Deploy all nodepools for Confluent Platform components.
 ==================================
 
-Set the tutorial directory for this tutorial under the directory you downloaded
-the tutorial files:
+A. Create CFK Operator node pool:
 
 ::
    
-  export TUTORIAL_HOME=<Tutorial directory>/quickstart-deploy
+  az aks nodepool add \
+  --resource-group rg-cp-poc-aks\
+  --cluster-name aks-cp-poc  \
+  --name cfkoperator \
+  --node-count 1 \
+  --node-vm-size Standard_D4as_v5 \
+  --enable-cluster-autoscaler \
+  --min-count 1 \
+  --max-count 2 \
+  --labels app-confluent=cfkoperator \
+  --no-wait
+
+B. Create Kraft node pool:
+
+::
+   
+  az aks nodepool add \
+  --resource-group rg-cp-poc-aks\
+  --cluster-name aks-cp-poc  \
+  --name kraft \
+  --node-count 3 \
+  --node-vm-size Standard_D8as_v5 \
+  --enable-cluster-autoscaler \
+  --min-count 3 \
+  --max-count 4 \
+  --labels app-confluent=kraft \
+  --no-wait
+
+C. Create Kafka Broker node pool::
+
+::
+   
+  az aks nodepool add \
+  --resource-group rg-cp-poc-aks\
+  --cluster-name aks-cp-poc  \
+  --name kafka \
+  --node-count 3 \
+  --node-vm-size Standard_E32bds_v5 \
+  --enable-cluster-autoscaler \
+  --min-count 3 \
+  --max-count 4 \
+  --labels app-confluent=kafka-broker \
+  --no-wait
+
+D. Create Schema Registry node pool:
+
+::
+   
+  az aks nodepool add \
+  --resource-group rg-cp-poc-aks\
+  --cluster-name aks-cp-poc  \
+  --name sr \
+  --node-count 2 \
+  --node-vm-size Standard_D4as_v5 \
+  --enable-cluster-autoscaler \
+  --min-count 2 \
+  --max-count 3 \
+  --labels app-confluent=sr \
+  --no-wait
+
+E. Create Connect node pool:
+
+::
+   
+  az aks nodepool add \
+  --resource-group rg-cp-poc-aks\
+  --cluster-name aks-cp-poc  \
+  --name connect \
+  --node-count 2 \
+  --node-vm-size Standard_D8as_v5 \
+  --enable-cluster-autoscaler \
+  --min-count 2 \
+  --max-count 3 \
+  --labels app-confluent=connect \
+  --no-wait
+
+F. Create Control Center node pool:
+
+::
+   
+  az aks nodepool add \
+  --resource-group rg-cp-poc-aks\
+  --cluster-name aks-cp-poc  \
+  --name c3 \
+  --node-count 1 \
+  --node-vm-size Standard_E16as_v5 \
+  --enable-cluster-autoscaler \
+  --min-count 1 \
+  --max-count 2 \
+  --labels app-confluent=c3 \
+  --no-wait
+
+G. Flink Kubernetes Operator node pool:
+
+::
+   
+  az aks nodepool add \
+  --resource-group rg-cp-poc-aks\
+  --cluster-name aks-cp-poc  \
+  --name flinkop \
+  --node-count 1 \
+  --node-vm-size Standard_D4as_v5 \
+  --enable-cluster-autoscaler \
+  --min-count 1 \
+  --max-count 2 \
+  --labels app-confluent=flinkoperator \
+  --no-wait
+
+H. Confluent Manager for Apache Flink Operator node pool:
+
+::
+   
+  az aks nodepool add \
+  --resource-group rg-cp-poc-aks\
+  --cluster-name aks-cp-poc  \
+  --name cmfoperator \
+  --node-count 1 \
+  --node-vm-size Standard_D4as_v5 \
+  --enable-cluster-autoscaler \
+  --min-count 1 \
+  --max-count 2 \
+  --labels app-confluent=cmfoperator \
+  --no-wait
+
+I. Flink Task manager node pool: 
+
+::
+   
+  az aks nodepool add \
+  --resource-group rg-cp-poc-aks\
+  --cluster-name aks-cp-poc  \
+  --name taskmanager \
+  --node-count 4 \
+  --node-vm-size Standard_E32bds_v5 \
+  --node-osdisk-type Ephemeral \
+  --enable-cluster-autoscaler \
+  --min-count 4 \
+  --max-count 5 \
+  --labels app-confluent=taskmanager \
+  --no-wait
+
+J. Create Flink Job Manager node pool:
+
+::
+   
+  az aks nodepool add \
+  --resource-group rg-cp-poc-aks\
+  --cluster-name aks-cp-poc  \
+  --name jobmanager \
+  --node-count 2 \
+  --node-vm-size Standard_E16bds_v5 \
+  --node-osdisk-type Ephemeral \
+  --enable-cluster-autoscaler \
+  --min-count 2 \
+  --max-count 3 \
+  --labels app-confluent=jobmanager \
+  --no-wait
 
 ===============================
 Deploy Confluent for Kubernetes
@@ -142,57 +263,32 @@ tutorial, you will configure all components in a single file and deploy all
 components with one ``kubectl apply`` command.
 
 The entire Confluent Platform is configured in one configuration file:
-``$TUTORIAL_HOME/confluent-platform.yaml``
+``confluent-platform.yaml``
 
 In this configuration file, there is a custom Resource configuration spec for
 each Confluent Platform component - replicas, image to use, resource
 allocations.
-
-For example, the Kafka section of the file is as follows:
-
-::
-  
-  ---
-  apiVersion: platform.confluent.io/v1beta1
-  kind: Kafka
-  metadata:
-    name: kafka
-    namespace: confluent
-  spec:
-    replicas: 3
-    image:
-      application: confluentinc/cp-server:7.9.0
-      init: confluentinc/confluent-init-container:2.11.0
-    dataVolumeCapacity: 10Gi
-    metricReporter:
-      enabled: true
-    dependencies:
-      zookeeper:
-        endpoint: zookeeper.confluent.svc.cluster.local:2181
-  ---
   
 =========================
 Deploy Confluent Platform
 =========================
 
+#. Replace Kubernetes Node host/ domain in Confluent Platform 
+   ::
+
+     Replace "<NODEIP/HOST>" with the node's k8s host domain / ip address.
+
 #. Deploy Confluent Platform with the above configuration:
 
    ::
 
-     kubectl apply -f $TUTORIAL_HOME/confluent-platform.yaml
-
-   Note: If you are deploying a single node dev cluster, then use this yaml file:
-
-   ::
-
-     kubectl apply -f $TUTORIAL_HOME/confluent-platform-singlenode.yaml
-     
+     kubectl apply -f confluent-platform.yaml
 
 #. Check that all Confluent Platform resources are deployed:
 
    ::
    
-     kubectl get confluent
+     kubectl get pods
 
 #. Get the status of any component. For example, to check Kafka:
 
@@ -203,44 +299,45 @@ Deploy Confluent Platform
 ========
 Validate
 ========
+Create an Azure VM to validate producers and consumers.
 
-Deploy producer application
-^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Run producer application CLI on Azure VM
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Now that we've got the infrastructure set up, let's deploy the producer client
-app.
+Now that we've got the infrastructure set up, let's deploy the producer client.
 
-The producer app is packaged and deployed as a pod on Kubernetes. The required
-topic is defined as a KafkaTopic custom resource in
-``$TUTORIAL_HOME/producer-app-data.yaml``.
-
-The ``$TUTORIAL_HOME/producer-app-data.yaml`` defines the ``elastic-0``
-topic as follows:
+Install confluent cli utility to create topics and test the production & consumption of messages. 
 
 ::
 
-  apiVersion: platform.confluent.io/v1beta1
-  kind: KafkaTopic
-  metadata:
-    name: elastic-0
-    namespace: confluent
-  spec:
-    replicas: 3 # change to 1 if using single node
-    partitionCount: 1
-    configs:
-      cleanup.policy: "delete"
+  curl -O https://packages.confluent.io/archive/7.9/confluent-7.9.0.tar.gz
+
+  tar xzf confluent-7.9.0.tar.gz
+
+  export CONFLUENT_HOME=~/confluent-7.9.0
+
+  export PATH=$PATH:$CONFLUENT_HOME/bin
+
+  sudo apt install default-jre
+
       
-Deploy the producer app:
+Create topics using cli:
 
 ::
    
-   kubectl apply -f $TUTORIAL_HOME/producer-app-data.yaml
+   kafka-topics --create --bootstrap-server <NODEIP/HOST>:30000  --topic test-topic
 
-Note: If you are deploying a single node dev cluster, then use this yaml file:
+Produce using kafka-console-cli:
 
 ::
-  
-  kubectl apply -f $TUTORIAL_HOME/producer-app-data-singlenode.yaml
+   
+   kafka-console-producer --bootstrap-server <NODEIP/HOST>:30000 --topic test-topic
+
+Consume using kafka-console-cli:
+
+::
+   
+   kafka-console-consumer --bootstrap-server <NODEIP/HOST>:30000 --topic test-topic --from-beginning
 
 Validate in Control Center
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -259,7 +356,7 @@ Use Control Center to monitor the Confluent Platform, and see the created topic 
    
      http://localhost:9021
 
-#. Check that the ``elastic-0`` topic was created and that messages are being produced to the topic.
+#. Check that the ``test-topic`` topic was created and that messages are being produced to the topic.
 
 =========
 Tear Down
@@ -269,11 +366,7 @@ Shut down Confluent Platform and the data:
 
 ::
 
-  kubectl delete -f $TUTORIAL_HOME/producer-app-data.yaml
-
-::
-
-  kubectl delete -f $TUTORIAL_HOME/confluent-platform.yaml
+  kubectl delete -f confluent-platform.yaml
 
 ::
 
