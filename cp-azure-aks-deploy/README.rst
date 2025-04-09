@@ -218,9 +218,9 @@ J. Create Flink Job Manager node pool:
   --labels app-confluent=jobmanager \
   --no-wait
 
-===============================
-Deploy Confluent for Kubernetes
-===============================
+========================================
+Deploy Confluent for Kubernetes Operator
+========================================
 
 #. Create the namespace to use.
 
@@ -245,7 +245,8 @@ Deploy Confluent for Kubernetes
 
    ::
 
-     helm upgrade --install confluent-operator confluentinc/confluent-for-kubernetes --namespace confluent
+     helm upgrade --install confluent-operator confluentinc/confluent-for-kubernetes --namespace confluent -f values.yaml
+     NOTE: values.yaml file contains labels for operator pod for scheduling pods to particular nodes.
   
 #. Check that the Confluent For Kubernetes pod comes up and is running:
 
