@@ -184,7 +184,7 @@ H. Confluent Manager for Apache Flink Operator node pool:
   --labels app-confluent=cmfoperator \
   --no-wait
 
-I. Flink Task manager node pool: 
+9. Flink Task manager node pool: 
 
 ::
    
@@ -206,7 +206,7 @@ J. Create Flink Job Manager node pool:
 ::
    
   az aks nodepool add \
-  --resource-group rg-cp-poc-aks\
+  --resource-group rg-cp-poc-aks \
   --cluster-name aks-cp-poc  \
   --name jobmanager \
   --node-count 2 \
@@ -218,9 +218,9 @@ J. Create Flink Job Manager node pool:
   --labels app-confluent=jobmanager \
   --no-wait
 
-===============================
-Deploy Confluent for Kubernetes
-===============================
+========================================
+Deploy Confluent for Kubernetes Operator
+========================================
 
 #. Create the namespace to use.
 
@@ -245,7 +245,9 @@ Deploy Confluent for Kubernetes
 
    ::
 
-     helm upgrade --install confluent-operator confluentinc/confluent-for-kubernetes --namespace confluent
+     helm upgrade --install confluent-operator confluentinc/confluent-for-kubernetes --namespace confluent -f values.yaml
+     
+     NOTE: values.yaml file contains labels for operator pod for scheduling pods to particular nodes.
   
 #. Check that the Confluent For Kubernetes pod comes up and is running:
 
@@ -279,6 +281,12 @@ Deploy Confluent Platform
 
      Replace "<NODEIP/HOST>" with the node's k8s host domain / ip address.
 
+#. Deploy Storage Class for automatically storage provisioning:
+
+   ::
+
+     kubectl apply -f storage-class.yaml
+
 #. Deploy Confluent Platform with the above configuration:
 
    ::
@@ -290,12 +298,6 @@ Deploy Confluent Platform
    ::
    
      kubectl get pods
-
-#. Get the status of any component. For example, to check Kafka:
-
-   ::
-   
-     kubectl describe kafka
 
 ========
 Validate
