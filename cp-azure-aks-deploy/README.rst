@@ -246,7 +246,8 @@ Deploy Confluent for Kubernetes Operator
    ::
 
      helm upgrade --install confluent-operator confluentinc/confluent-for-kubernetes --namespace confluent -f values.yaml
-     NOTE: values.yaml file contains labels for operator pod for scheduling pods to particular nodes.
+     
+NOTE: values.yaml file contains labels for operator pod for scheduling pods to particular nodes.
   
 #. Check that the Confluent For Kubernetes pod comes up and is running:
 
