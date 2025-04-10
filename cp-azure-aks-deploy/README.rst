@@ -385,6 +385,17 @@ Install Flink K8s operator:
 
   helm upgrade --install cp-flink-kubernetes-operator confluentinc/flink-kubernetes-operator -n flink
   
+Install Confluent Manager for Apache Flink K8s operator:
+::
+
+  helm upgrade --install cmf confluentinc/confluent-manager-for-apache-flink --namespace flink
+
+Run kubectl command to check all pods are running - 3 cert-manager pods and two pods for CMF and operator:
+::
+
+  kubectl get pods -n flink
+
+  
 
 =========
 Tear Down
