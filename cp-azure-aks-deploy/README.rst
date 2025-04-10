@@ -1,4 +1,4 @@
-Deploy Confluent Platform on Azure AKS
+Deploy Confluent Platform + Flink on Azure AKS
 ======================================
 
 To complete this scenario, you'll follow these steps:
@@ -14,6 +14,10 @@ To complete this scenario, you'll follow these steps:
 #. Deploy Confluent Platform.
 
 #. Run the Producer & Consumer.
+
+#. Deploy Flink Operators.
+
+#. Deploy Flink Applications.
 
 #. Tear down Confluent Platform.
 
@@ -360,6 +364,27 @@ Use Control Center to monitor the Confluent Platform, and see the created topic 
      http://localhost:9021
 
 #. Check that the ``test-topic`` topic was created and that messages are being produced to the topic.
+
+=======================
+Deploy Flink Operators.
+=======================
+
+Create a namespace or use an existing namespace:
+
+::
+
+  kubectl create namespace flink
+
+Install the cert-manager
+::
+
+  kubectl create -f https://github.com/jetstack/cert-manager/releases/download/v1.8.2/cert-manager.yaml
+  
+Install Flink K8s operator:
+::
+
+  helm upgrade --install cp-flink-kubernetes-operator confluentinc/flink-kubernetes-operator -n flink
+  
 
 =========
 Tear Down
