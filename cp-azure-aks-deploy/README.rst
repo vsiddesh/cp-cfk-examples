@@ -1,4 +1,4 @@
-Deploy Confluent Platform on Azure AKS
+Deploy Confluent Platform + Flink on Azure AKS
 ======================================
 
 To complete this scenario, you'll follow these steps:
@@ -14,6 +14,10 @@ To complete this scenario, you'll follow these steps:
 #. Deploy Confluent Platform.
 
 #. Run the Producer & Consumer.
+
+#. Deploy Flink Operators.
+
+#. Deploy Flink Applications.
 
 #. Tear down Confluent Platform.
 
@@ -360,6 +364,125 @@ Use Control Center to monitor the Confluent Platform, and see the created topic 
      http://localhost:9021
 
 #. Check that the ``test-topic`` topic was created and that messages are being produced to the topic.
+
+=======================
+Deploy Flink Operators.
+=======================
+
+Create a namespace or use an existing namespace:
+
+::
+
+  kubectl create namespace flink
+
+Install the cert-manager
+::
+
+  kubectl create -f https://github.com/jetstack/cert-manager/releases/download/v1.8.2/cert-manager.yaml
+  
+Install Flink K8s operator:
+::
+
+  helm upgrade --install cp-flink-kubernetes-operator confluentinc/flink-kubernetes-operator -n flink -f flink.yaml
+  
+Install Confluent Manager for Apache Flink K8s operator:
+::
+
+  helm upgrade --install cmf confluentinc/confluent-manager-for-apache-flink --namespace flink
+
+Run kubectl command to check all pods are running - 3 cert-manager pods and two pods for CMF and operator:
+::
+
+  kubectl get pods -n flink
+
+=========================
+Deploy Flink Applications
+=========================
+
+Port forwarding for curl way deployment:
+
+::
+
+  kubectl port-forward -n flink svc/cmf-service 8080:80
+
+Create the environment:
+::
+
+  curl -X POST  -H "Content-Type: application/json"  -d @env_payload.json localhost:8080/cmf/api/v1/environments
+
+::
+
+  {
+  "name": "default",
+  "kubernetesNamespace": "flink",
+  "flinkApplicationDefaults": {
+    "metadata": {
+      "annotations": {
+        "fmc.platform.confluent.io/intra-cluster-ssl": "false"
+      }
+    },
+    "spec": {
+      "flinkConfiguration": {
+        "taskmanager.numberOfTaskSlots": "2",
+        "rest.profiling.enabled": "true"
+        }
+      }
+    }
+  }
+
+Deploy the Flink application:
+::
+
+  curl -X POST  -H "Content-Type: application/json"  -d @app_payload.json localhost:8080/cmf/api/v1/environments/default/applications
+
+::
+
+  {
+  "apiVersion": "cmf.confluent.io/v1alpha1",
+  "kind": "FlinkApplication",
+  "metadata": {
+    "name": "basic-example"
+  },
+  "spec": {
+    "image": "confluentinc/cp-flink:1.19.1-cp1",
+    "flinkVersion": "v1_19",
+    "flinkConfiguration": {
+      "taskmanager.numberOfTaskSlots": "1",
+      "metrics.reporter.prom.factory.class": "org.apache.flink.metrics.prometheus.PrometheusReporterFactory",
+      "metrics.reporter.prom.port": "9249-9250"
+    },
+    "serviceAccount": "flink",
+    "jobManager": {
+      "resource": {
+        "memory": "1048m",
+        "cpu": 1
+      }
+    },
+    "taskManager": {
+      "resource": {
+        "memory": "1048m",
+        "cpu": 1
+      }
+    },
+    "job": {
+      "jarURI": "local:///opt/flink/examples/streaming/StateMachineExample.jar",
+      "state": "running",
+      "parallelism": 3,
+      "upgradeMode": "stateless"
+    }
+  },
+  "status": null
+  }
+
+Application Port forwarding:
+::
+
+  kubectl port-forward svc/<service_name> 8081:8081 -n flink
+  kubectl port-forward svc/basic-example-rest 8081:8081 -n flink
+
+
+  
+  
 
 =========
 Tear Down
