@@ -472,7 +472,7 @@ Deploy the Flink application:
     }
   },
   "status": null
-}
+  }
 
 Application Port forwarding:
 ::
