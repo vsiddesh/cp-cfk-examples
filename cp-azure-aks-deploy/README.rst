@@ -395,6 +395,93 @@ Run kubectl command to check all pods are running - 3 cert-manager pods and two 
 
   kubectl get pods -n flink
 
+=========================
+Deploy Flink Applications
+=========================
+
+Port forwarding for curl way deployment:
+
+::
+
+  kubectl port-forward -n flink svc/cmf-service 8080:80
+
+Create the environment:
+::
+
+  curl -X POST  -H "Content-Type: application/json"  -d @env_payload.json localhost:8080/cmf/api/v1/environments
+
+::
+
+  {
+  "name": "default",
+  "kubernetesNamespace": "flink",
+  "flinkApplicationDefaults": {
+    "metadata": {
+      "annotations": {
+        "fmc.platform.confluent.io/intra-cluster-ssl": "false"
+      }
+    },
+    "spec": {
+      "flinkConfiguration": {
+        "taskmanager.numberOfTaskSlots": "2",
+        "rest.profiling.enabled": "true"
+        }
+      }
+    }
+  }
+
+Deploy the Flink application:
+::
+
+  curl -X POST  -H "Content-Type: application/json"  -d @app_payload.json localhost:8080/cmf/api/v1/environments/default/applications
+
+::
+
+  {
+  "apiVersion": "cmf.confluent.io/v1alpha1",
+  "kind": "FlinkApplication",
+  "metadata": {
+    "name": "basic-example"
+  },
+  "spec": {
+    "image": "confluentinc/cp-flink:1.19.1-cp1",
+    "flinkVersion": "v1_19",
+    "flinkConfiguration": {
+      "taskmanager.numberOfTaskSlots": "1",
+      "metrics.reporter.prom.factory.class": "org.apache.flink.metrics.prometheus.PrometheusReporterFactory",
+      "metrics.reporter.prom.port": "9249-9250"
+    },
+    "serviceAccount": "flink",
+    "jobManager": {
+      "resource": {
+        "memory": "1048m",
+        "cpu": 1
+      }
+    },
+    "taskManager": {
+      "resource": {
+        "memory": "1048m",
+        "cpu": 1
+      }
+    },
+    "job": {
+      "jarURI": "local:///opt/flink/examples/streaming/StateMachineExample.jar",
+      "state": "running",
+      "parallelism": 3,
+      "upgradeMode": "stateless"
+    }
+  },
+  "status": null
+}
+
+Application Port forwarding:
+::
+
+  kubectl port-forward svc/<service_name> 8081:8081 -n flink
+  kubectl port-forward svc/basic-example-rest 8081:8081 -n flink
+
+
+  
   
 
 =========
