@@ -383,7 +383,7 @@ Install the cert-manager
 Install Flink K8s operator:
 ::
 
-  helm upgrade --install cp-flink-kubernetes-operator confluentinc/flink-kubernetes-operator -n flink -f flink.yaml
+  helm upgrade --install cp-flink-kubernetes-operator confluentinc/flink-kubernetes-operator -n flink -f flink-operator-values.yaml
   
 Install Confluent Manager for Apache Flink K8s operator:
 ::
