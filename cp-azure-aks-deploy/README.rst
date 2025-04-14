@@ -383,17 +383,17 @@ Install the cert-manager
 Install Flink K8s operator:
 ::
 
-  helm upgrade --install cp-flink-kubernetes-operator confluentinc/flink-kubernetes-operator -n flink -f flink-operator-values.yaml
+  helm upgrade --install cp-flink-kubernetes-operator confluentinc/flink-kubernetes-operator -n confluent -f flink-operator-values.yaml
   
 Install Confluent Manager for Apache Flink K8s operator:
 ::
 
-  helm upgrade --install cmf confluentinc/confluent-manager-for-apache-flink --namespace flink
+  helm upgrade --install cmf confluentinc/confluent-manager-for-apache-flink --namespace confluent
 
 Run kubectl command to check all pods are running - 3 cert-manager pods and two pods for CMF and operator:
 ::
 
-  kubectl get pods -n flink
+  kubectl get pods -n confluent
 
 =========================
 Deploy Flink Applications
