@@ -249,7 +249,7 @@ Deploy Confluent for Kubernetes Operator
 
    ::
 
-     helm upgrade --install confluent-operator confluentinc/confluent-for-kubernetes --namespace confluent -f values.yaml
+     helm upgrade --install confluent-operator confluentinc/confluent-for-kubernetes --namespace confluent -f values.yaml --set enableCMFDay2Ops=true
      
      NOTE: values.yaml file contains labels for operator pod for scheduling pods to particular nodes.
   
