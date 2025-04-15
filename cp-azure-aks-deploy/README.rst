@@ -419,20 +419,29 @@ Application Port forwarding:
 ::
 
   kubectl port-forward svc/<service_name> 8081:8081 -n flink
-  kubectl port-forward svc/basic-example-rest 8081:8081 -n flink
+  kubectl port-forward svc/flink-app-rest 8081:8081 -n flink
 
 
 =========
 Tear Down
 =========
 
-Shut down Confluent Platform and the data:
+Delete Flink components:
 
 ::
 
+  kubectl delete -f flink-app.yaml
+  kubectl delete -f flink-env.yaml
+  kubectl delete -f cmfrestclass.yaml
+  
+  helm delete  cmf -n confluent
+  helm delete cp-flink-kubernetes-operator -n confluent
+  
+
+Delete Confluent Platform components:
+::
   kubectl delete -f confluent-platform.yaml
+  kubectl delete -f storage-class.yaml
 
-::
-
-  helm uninstall confluent-operator
+  helm uninstall confluent-operator -n confluent
   
