@@ -2,7 +2,7 @@ apiVersion: platform.confluent.io/v1beta1
 kind: KRaftController
 metadata:
   name: kraftcontroller
-  namespace: hdfc
+  namespace: confluent
 spec:
   dataVolumeCapacity: 100G
   image:
@@ -14,7 +14,7 @@ apiVersion: platform.confluent.io/v1beta1
 kind: Kafka
 metadata:
   name: kafka
-  namespace: hdfc
+  namespace: confluent
 spec:
   dependencies:
     kRaftController:
@@ -30,7 +30,7 @@ apiVersion: platform.confluent.io/v1beta1
 kind: Connect
 metadata:
   name: connect
-  namespace: hdfc
+  namespace: confluent
 spec:
   replicas: 2
   image:
@@ -56,7 +56,7 @@ apiVersion: platform.confluent.io/v1beta1
 kind: KsqlDB
 metadata:
   name: ksqldb
-  namespace: hdfc
+  namespace: confluent
 spec:
   replicas: 1
   image:
@@ -68,7 +68,7 @@ apiVersion: platform.confluent.io/v1beta1
 kind: ControlCenter
 metadata:
   name: controlcenter
-  namespace: hdfc
+  namespace: confluent
 spec:
   replicas: 1
   image:
@@ -77,19 +77,19 @@ spec:
   dataVolumeCapacity: 100Gi
   dependencies:
     schemaRegistry:
-      url: http://schemaregistry.hdfc.svc.cluster.local:8081
+      url: http://schemaregistry.confluent.svc.cluster.local:8081
     ksqldb:
     - name: ksqldb
-      url: http://ksqldb.hdfc.svc.cluster.local:8088
+      url: http://ksqldb.confluent.svc.cluster.local:8088
     connect:
     - name: connect
-      url: http://connect.hdfc.svc.cluster.local:8083
+      url: http://connect.confluent.svc.cluster.local:8083
 ---
 apiVersion: platform.confluent.io/v1beta1
 kind: SchemaRegistry
 metadata:
   name: schemaregistry
-  namespace: hdfc
+  namespace: confluent
 spec:
   replicas: 1
   image:
