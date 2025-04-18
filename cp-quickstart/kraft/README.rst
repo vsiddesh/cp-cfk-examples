@@ -1,9 +1,6 @@
 Deploy Confluent Platform
 =========================
 
-* Quickly set up the complete Confluent Platform on the Kubernetes.
-* Configure a producer to generate sample data.
-
 To complete this scenario, you'll follow these steps:
 
 #. Deploy Confluent For Kubernetes.
