@@ -1,0 +1,4 @@
+FROM confluentinc/cp-server-connect:7.9.0
+USER root
+RUN confluent-hub install --no-prompt debezium/debezium-connector-postgresql:latest
+USER 1001
