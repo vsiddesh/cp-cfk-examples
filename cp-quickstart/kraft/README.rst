@@ -41,6 +41,13 @@ Deploy Confluent for Kubernetes
    ::
 
      helm upgrade --install confluent-operator confluentinc/confluent-for-kubernetes --namespace confluent
+
+   Install from local helm chart:
+
+   ::
+
+     helm upgrade --install confluent-operator ./confluent-for-kubernetes/ --namespace confluent
+
   
 #. Check that the Confluent For Kubernetes pod comes up and is running:
 
