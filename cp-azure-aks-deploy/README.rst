@@ -342,9 +342,9 @@ Now that we've got the infrastructure set up, let's deploy the producer client.
 
 #. Consume using kafka-console-cli:
 
-::
+   ::
    
-   kafka-console-consumer --bootstrap-server <NODEIP/HOST>:30000 --topic test-topic --from-beginning
+      kafka-console-consumer --bootstrap-server <NODEIP/HOST>:30000 --topic test-topic --from-beginning
 
 Validate in Control Center
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -371,29 +371,33 @@ Deploy Flink Operators.
 
 #. Create a namespace or use an existing namespace:
 
-::
+   ::
 
-  kubectl create namespace flink
+     kubectl create namespace flink
 
 #. Install the cert-manager
-::
 
-  kubectl create -f https://github.com/jetstack/cert-manager/releases/download/v1.8.2/cert-manager.yaml
+   ::
+
+     kubectl create -f https://github.com/jetstack/cert-manager/releases/download/v1.8.2/cert-manager.yaml
   
 #. Install Flink K8s operator:
-::
 
-  helm upgrade --install cp-flink-kubernetes-operator confluentinc/flink-kubernetes-operator -n confluent -f flink-operator-values.yaml
+   ::
+
+     helm upgrade --install cp-flink-kubernetes-operator confluentinc/flink-kubernetes-operator -n confluent -f flink-operator-values.yaml
   
 #. Install Confluent Manager for Apache Flink K8s operator:
-::
 
-  helm upgrade --install cmf confluentinc/confluent-manager-for-apache-flink --namespace confluent
+   ::
+
+     helm upgrade --install cmf confluentinc/confluent-manager-for-apache-flink --namespace confluent
 
 #. Run kubectl command to check all pods are running - 3 cert-manager pods and two pods for CMF and operator:
-::
 
-  kubectl get pods -n confluent
+   ::
+
+     kubectl get pods -n confluent
 
 =========================
 Deploy Flink Applications
@@ -401,54 +405,58 @@ Deploy Flink Applications
 
 #. Deploy confluent manager for apache flink rest class:
 
-::
+   ::
 
-  kubectl apply -f cmfrestclass.yaml
+     kubectl apply -f cmfrestclass.yaml
 
 #. Create the environment:
-::
 
-  kubectl apply -f flink-env.yaml
+   ::
+
+     kubectl apply -f flink-env.yaml
 
 #. Create a new Azure storage account and provision a container on it.
 Update blob properties in flink-app.yaml
-::
+   ::
 
-  state.checkpoints.dir: wasbs://<container>@<storage-account>.blob.core.windows.net/checkpoint/
-  fs.azure.account.key.<storage-account>.blob.core.windows.net: <azure-access-key>
+     state.checkpoints.dir: wasbs://<container>@<storage-account>.blob.core.windows.net/checkpoint/
+     fs.azure.account.key.<storage-account>.blob.core.windows.net: <azure-access-key>
 
 #. Deploy the Flink application:
-::
 
-  kubectl apply -f flink-app.yaml
+   ::
+
+     kubectl apply -f flink-app.yaml
 
 #. Flink Application Port forwarding for accessing Flink application UI:
-::
 
-  kubectl port-forward svc/<service_name> 8081:8081 -n flink
-  kubectl port-forward svc/flink-app-rest 8081:8081 -n flink
+ ::
+
+     kubectl port-forward svc/<service_name> 8081:8081 -n flink
+     kubectl port-forward svc/flink-app-rest 8081:8081 -n flink
 
 
 =========
 Tear Down
 =========
 
-Delete Flink components:
+#. Delete Flink components:
 
-::
+   ::
 
-  kubectl delete -f flink-app.yaml
-  kubectl delete -f flink-env.yaml
-  kubectl delete -f cmfrestclass.yaml
+     kubectl delete -f flink-app.yaml
+     kubectl delete -f flink-env.yaml
+     kubectl delete -f cmfrestclass.yaml
   
-  helm delete  cmf -n confluent
-  helm delete cp-flink-kubernetes-operator -n confluent
+     helm delete  cmf -n confluent
+     helm delete cp-flink-kubernetes-operator -n confluent
   
 
-Delete Confluent Platform components:
-::
-  kubectl delete -f confluent-platform.yaml
-  kubectl delete -f storage-class.yaml
+#. Delete Confluent Platform components:
 
-  helm uninstall confluent-operator -n confluent
+   ::
+     kubectl delete -f confluent-platform.yaml
+     kubectl delete -f storage-class.yaml
+
+     helm uninstall confluent-operator -n confluent
   
