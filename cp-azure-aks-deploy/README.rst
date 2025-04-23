@@ -455,6 +455,7 @@ Tear Down
 #. Delete Confluent Platform components:
 
    ::
+
      kubectl delete -f confluent-platform.yaml
      kubectl delete -f storage-class.yaml
 
