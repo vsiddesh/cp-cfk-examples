@@ -315,30 +315,30 @@ Now that we've got the infrastructure set up, let's deploy the producer client.
 
 #. Install Confluent CLI utility to create topics and test the production & consumption of messages. 
 
-::
+   ::
 
-  curl -O https://packages.confluent.io/archive/7.9/confluent-7.9.0.tar.gz
+     curl -O https://packages.confluent.io/archive/7.9/confluent-7.9.0.tar.gz
 
-  tar xzf confluent-7.9.0.tar.gz
+     tar xzf confluent-7.9.0.tar.gz
 
-  export CONFLUENT_HOME=~/confluent-7.9.0
+     export CONFLUENT_HOME=~/confluent-7.9.0
 
-  export PATH=$PATH:$CONFLUENT_HOME/bin
+     export PATH=$PATH:$CONFLUENT_HOME/bin
 
-  sudo apt install default-jre
+     sudo apt install default-jre
 
       
 #. Create topics using CLI:
 
-::
+   ::
    
-   kafka-topics --create --bootstrap-server <NODEIP/HOST>:30000  --topic test-topic
+      kafka-topics --create --bootstrap-server <NODEIP/HOST>:30000  --topic test-topic
 
 #. Produce using kafka-console-cli:
 
-::
+   ::
    
-   kafka-console-producer --bootstrap-server <NODEIP/HOST>:30000 --topic test-topic
+      kafka-console-producer --bootstrap-server <NODEIP/HOST>:30000 --topic test-topic
 
 #. Consume using kafka-console-cli:
 
