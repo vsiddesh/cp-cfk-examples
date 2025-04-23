@@ -415,8 +415,8 @@ Deploy Flink Applications
 
      kubectl apply -f flink-env.yaml
 
-#. Create a new Azure storage account and provision a container on it.
-Update blob properties in flink-app.yaml
+#. Create a new Azure storage account and provision a container on it. Update below blob properties in flink-app.yaml:
+   
    ::
 
      state.checkpoints.dir: wasbs://<container>@<storage-account>.blob.core.windows.net/checkpoint/
@@ -428,10 +428,10 @@ Update blob properties in flink-app.yaml
 
      kubectl apply -f flink-app.yaml
 
-#. Flink Application Port forwarding for accessing Flink application UI:
+#. Flink Application Port forwarding for accessing the Flink application UI:
 
- ::
-
+   ::
+     
      kubectl port-forward svc/<service_name> 8081:8081 -n flink
      kubectl port-forward svc/flink-app-rest 8081:8081 -n flink
 
