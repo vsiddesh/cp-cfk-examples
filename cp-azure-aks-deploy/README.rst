@@ -38,23 +38,23 @@ Deploy Azure AKS with System Nodepool.
 
 Create an AKS cluster with the system Nodepool.
 
-::
+   ::
    
-  az aks create \
-  --resource-group rg-cp-poc-aks \
-  --name aks-cp-poc  \
-  --location jioindiawest \
-  --node-count 2 \
-  --node-vm-size Standard_D8ds_v5 \
-  --generate-ssh-keys \
-  --nodepool-name agentpool \
-  --enable-cluster-autoscaler \
-  --min-count 2 \
-  --max-count 5 \
-  --kubernetes-version 1.31.6 \
-  --nodepool-taints CriticalAddonsOnly=true:NoSchedule \
-  --no-wait \ 
-  --enable-private-cluster 
+     az aks create \
+     --resource-group rg-cp-poc-aks \
+     --name aks-cp-poc  \
+     --location jioindiawest \
+     --node-count 2 \
+     --node-vm-size Standard_D8ds_v5 \
+     --generate-ssh-keys \
+     --nodepool-name agentpool \
+     --enable-cluster-autoscaler \
+     --min-count 2 \
+     --max-count 5 \
+     --kubernetes-version 1.31.6 \
+     --nodepool-taints CriticalAddonsOnly=true:NoSchedule \
+     --no-wait \ 
+     --enable-private-cluster 
 
 ==================================
 Deploy all nodepools for Confluent Platform components.
@@ -62,165 +62,165 @@ Deploy all nodepools for Confluent Platform components.
 
 A. Create CFK Operator node pool:
 
-::
+   ::
    
-  az aks nodepool add \
-  --resource-group rg-cp-poc-aks \
-  --cluster-name aks-cp-poc  \
-  --name cfkoperator \
-  --node-count 1 \
-  --node-vm-size Standard_D4as_v5 \
-  --enable-cluster-autoscaler \
-  --min-count 1 \
-  --max-count 2 \
-  --labels app-confluent=cfkoperator \
-  --no-wait
+     az aks nodepool add \
+     --resource-group rg-cp-poc-aks \
+     --cluster-name aks-cp-poc  \
+     --name cfkoperator \
+     --node-count 1 \
+     --node-vm-size Standard_D4as_v5 \
+     --enable-cluster-autoscaler \
+     --min-count 1 \
+     --max-count 2 \
+     --labels app-confluent=cfkoperator \
+     --no-wait
 
 B. Create Kraft node pool:
 
-::
+   ::
    
-  az aks nodepool add \
-  --resource-group rg-cp-poc-aks \
-  --cluster-name aks-cp-poc  \
-  --name kraft \
-  --node-count 3 \
-  --node-vm-size Standard_D8as_v5 \
-  --enable-cluster-autoscaler \
-  --min-count 3 \
-  --max-count 4 \
-  --labels app-confluent=kraft \
-  --no-wait
+     az aks nodepool add \
+     --resource-group rg-cp-poc-aks \
+     --cluster-name aks-cp-poc  \
+     --name kraft \
+     --node-count 3 \
+     --node-vm-size Standard_D8as_v5 \
+     --enable-cluster-autoscaler \
+     --min-count 3 \
+     --max-count 4 \
+     --labels app-confluent=kraft \
+     --no-wait
 
 C. Create Kafka Broker node pool::
 
-::
+   ::
    
-  az aks nodepool add \
-  --resource-group rg-cp-poc-aks \
-  --cluster-name aks-cp-poc  \
-  --name kafka \
-  --node-count 3 \
-  --node-vm-size Standard_E32bds_v5 \
-  --enable-cluster-autoscaler \
-  --min-count 3 \
-  --max-count 4 \
-  --labels app-confluent=kafka-broker \
-  --no-wait
+     az aks nodepool add \
+     --resource-group rg-cp-poc-aks \
+     --cluster-name aks-cp-poc  \
+     --name kafka \
+     --node-count 3 \
+     --node-vm-size Standard_E32bds_v5 \
+     --enable-cluster-autoscaler \
+     --min-count 3 \
+     --max-count 4 \
+     --labels app-confluent=kafka-broker \
+     --no-wait
 
 D. Create Schema Registry node pool:
 
-::
+   ::
    
-  az aks nodepool add \
-  --resource-group rg-cp-poc-aks \
-  --cluster-name aks-cp-poc  \
-  --name sr \
-  --node-count 2 \
-  --node-vm-size Standard_D4as_v5 \
-  --enable-cluster-autoscaler \
-  --min-count 2 \
-  --max-count 3 \
-  --labels app-confluent=sr \
-  --no-wait
+     az aks nodepool add \
+     --resource-group rg-cp-poc-aks \
+     --cluster-name aks-cp-poc  \
+     --name sr \
+     --node-count 2 \
+     --node-vm-size Standard_D4as_v5 \
+     --enable-cluster-autoscaler \
+     --min-count 2 \
+     --max-count 3 \
+     --labels app-confluent=sr \
+     --no-wait
 
 E. Create Connect node pool:
 
-::
+   ::
    
-  az aks nodepool add \
-  --resource-group rg-cp-poc-aks \
-  --cluster-name aks-cp-poc  \
-  --name connect \
-  --node-count 2 \
-  --node-vm-size Standard_D8as_v5 \
-  --enable-cluster-autoscaler \
-  --min-count 2 \
-  --max-count 3 \
-  --labels app-confluent=connect \
-  --no-wait
+     az aks nodepool add \
+     --resource-group rg-cp-poc-aks \
+     --cluster-name aks-cp-poc  \
+     --name connect \
+     --node-count 2 \
+     --node-vm-size Standard_D8as_v5 \
+     --enable-cluster-autoscaler \
+     --min-count 2 \
+     --max-count 3 \
+     --labels app-confluent=connect \
+     --no-wait
 
 F. Create Control Center node pool:
 
-::
+   ::
    
-  az aks nodepool add \
-  --resource-group rg-cp-poc-aks \
-  --cluster-name aks-cp-poc  \
-  --name c3 \
-  --node-count 1 \
-  --node-vm-size Standard_E16as_v5 \
-  --enable-cluster-autoscaler \
-  --min-count 1 \
-  --max-count 2 \
-  --labels app-confluent=c3 \
-  --no-wait
+     az aks nodepool add \
+     --resource-group rg-cp-poc-aks \
+     --cluster-name aks-cp-poc  \
+     --name c3 \
+     --node-count 1 \
+     --node-vm-size Standard_E16as_v5 \
+     --enable-cluster-autoscaler \
+     --min-count 1 \
+     --max-count 2 \
+     --labels app-confluent=c3 \
+     --no-wait
 
 G. Flink Kubernetes Operator node pool:
 
-::
+   ::
    
-  az aks nodepool add \
-  --resource-group rg-cp-poc-aks \
-  --cluster-name aks-cp-poc  \
-  --name flinkop \
-  --node-count 1 \
-  --node-vm-size Standard_D4as_v5 \
-  --enable-cluster-autoscaler \
-  --min-count 1 \
-  --max-count 2 \
-  --labels app-confluent=flinkoperator \
-  --no-wait
+     az aks nodepool add \
+     --resource-group rg-cp-poc-aks \
+     --cluster-name aks-cp-poc  \
+     --name flinkop \
+     --node-count 1 \
+     --node-vm-size Standard_D4as_v5 \
+     --enable-cluster-autoscaler \
+     --min-count 1 \
+     --max-count 2 \
+     --labels app-confluent=flinkoperator \
+     --no-wait
 
 H. Confluent Manager for Apache Flink Operator node pool:
 
-::
+   ::
    
-  az aks nodepool add \
-  --resource-group rg-cp-poc-aks \
-  --cluster-name aks-cp-poc  \
-  --name cmfoperator \
-  --node-count 1 \
-  --node-vm-size Standard_D4as_v5 \
-  --enable-cluster-autoscaler \
-  --min-count 1 \
-  --max-count 2 \
-  --labels app-confluent=cmfoperator \
-  --no-wait
+     az aks nodepool add \
+     --resource-group rg-cp-poc-aks \
+     --cluster-name aks-cp-poc  \
+     --name cmfoperator \
+     --node-count 1 \
+     --node-vm-size Standard_D4as_v5 \
+     --enable-cluster-autoscaler \
+     --min-count 1 \
+     --max-count 2 \
+     --labels app-confluent=cmfoperator \
+     --no-wait
 
 9. Flink Task manager node pool: 
 
-::
+   ::
    
-  az aks nodepool add \
-  --resource-group rg-cp-poc-aks \
-  --cluster-name aks-cp-poc  \
-  --name taskmanager \
-  --node-count 4 \
-  --node-vm-size Standard_E32bds_v5 \
-  --node-osdisk-type Ephemeral \
-  --enable-cluster-autoscaler \
-  --min-count 4 \
-  --max-count 5 \
-  --labels app-confluent=taskmanager \
-  --no-wait
+     az aks nodepool add \
+     --resource-group rg-cp-poc-aks \
+     --cluster-name aks-cp-poc  \
+     --name taskmanager \
+     --node-count 4 \
+     --node-vm-size Standard_E32bds_v5 \
+     --node-osdisk-type Ephemeral \
+     --enable-cluster-autoscaler \
+     --min-count 4 \
+     --max-count 5 \
+     --labels app-confluent=taskmanager \
+     --no-wait
 
 J. Create Flink Job Manager node pool:
 
-::
+   ::
    
-  az aks nodepool add \
-  --resource-group rg-cp-poc-aks \
-  --cluster-name aks-cp-poc  \
-  --name jobmanager \
-  --node-count 2 \
-  --node-vm-size Standard_E16bds_v5 \
-  --node-osdisk-type Ephemeral \
-  --enable-cluster-autoscaler \
-  --min-count 2 \
-  --max-count 3 \
-  --labels app-confluent=jobmanager \
-  --no-wait
+     az aks nodepool add \
+     --resource-group rg-cp-poc-aks \
+     --cluster-name aks-cp-poc  \
+     --name jobmanager \
+     --node-count 2 \
+     --node-vm-size Standard_E16bds_v5 \
+     --node-osdisk-type Ephemeral \
+     --enable-cluster-autoscaler \
+     --min-count 2 \
+     --max-count 3 \
+     --labels app-confluent=jobmanager \
+     --no-wait
 
 ========================================
 Deploy Confluent for Kubernetes Operator
@@ -313,38 +313,38 @@ Run producer application CLI on Azure VM
 
 Now that we've got the infrastructure set up, let's deploy the producer client.
 
-Install confluent cli utility to create topics and test the production & consumption of messages. 
+#. Install Confluent CLI utility to create topics and test the production & consumption of messages. 
 
-::
+   ::
 
-  curl -O https://packages.confluent.io/archive/7.9/confluent-7.9.0.tar.gz
+     curl -O https://packages.confluent.io/archive/7.9/confluent-7.9.0.tar.gz
 
-  tar xzf confluent-7.9.0.tar.gz
+     tar xzf confluent-7.9.0.tar.gz
 
-  export CONFLUENT_HOME=~/confluent-7.9.0
+     export CONFLUENT_HOME=~/confluent-7.9.0
 
-  export PATH=$PATH:$CONFLUENT_HOME/bin
+     export PATH=$PATH:$CONFLUENT_HOME/bin
 
-  sudo apt install default-jre
+     sudo apt install default-jre
 
       
-Create topics using cli:
+#. Create topics using CLI:
 
-::
+   ::
    
-   kafka-topics --create --bootstrap-server <NODEIP/HOST>:30000  --topic test-topic
+      kafka-topics --create --bootstrap-server <NODEIP/HOST>:30000  --topic test-topic
 
-Produce using kafka-console-cli:
+#. Produce using kafka-console-cli:
 
-::
+   ::
    
-   kafka-console-producer --bootstrap-server <NODEIP/HOST>:30000 --topic test-topic
+      kafka-console-producer --bootstrap-server <NODEIP/HOST>:30000 --topic test-topic
 
-Consume using kafka-console-cli:
+#. Consume using kafka-console-cli:
 
-::
+   ::
    
-   kafka-console-consumer --bootstrap-server <NODEIP/HOST>:30000 --topic test-topic --from-beginning
+      kafka-console-consumer --bootstrap-server <NODEIP/HOST>:30000 --topic test-topic --from-beginning
 
 Validate in Control Center
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -369,79 +369,95 @@ Use Control Center to monitor the Confluent Platform, and see the created topic 
 Deploy Flink Operators.
 =======================
 
-Create a namespace or use an existing namespace:
+#. Create a namespace or use an existing namespace:
 
-::
+   ::
 
-  kubectl create namespace flink
+     kubectl create namespace flink
 
-Install the cert-manager
-::
+#. Install the cert-manager
 
-  kubectl create -f https://github.com/jetstack/cert-manager/releases/download/v1.8.2/cert-manager.yaml
+   ::
+
+     kubectl create -f https://github.com/jetstack/cert-manager/releases/download/v1.8.2/cert-manager.yaml
   
-Install Flink K8s operator:
-::
+#. Install Flink K8s operator:
 
-  helm upgrade --install cp-flink-kubernetes-operator confluentinc/flink-kubernetes-operator -n confluent -f flink-operator-values.yaml
+   ::
+
+     helm upgrade --install cp-flink-kubernetes-operator confluentinc/flink-kubernetes-operator -n confluent -f flink-operator-values.yaml
   
-Install Confluent Manager for Apache Flink K8s operator:
-::
+#. Install Confluent Manager for Apache Flink K8s operator:
 
-  helm upgrade --install cmf confluentinc/confluent-manager-for-apache-flink --namespace confluent
+   ::
 
-Run kubectl command to check all pods are running - 3 cert-manager pods and two pods for CMF and operator:
-::
+     helm upgrade --install cmf confluentinc/confluent-manager-for-apache-flink --namespace confluent
 
-  kubectl get pods -n confluent
+#. Run kubectl command to check all pods are running - 3 cert-manager pods and two pods for CMF and operator:
+
+   ::
+
+     kubectl get pods -n confluent
 
 =========================
 Deploy Flink Applications
 =========================
 
-Deploy confluent manager for apache flink rest class:
+#. Deploy confluent manager for apache flink rest class:
 
-::
+   ::
 
-  kubectl apply -f cmfrestclass.yaml
+     kubectl apply -f cmfrestclass.yaml
 
-Create the environment:
-::
+#. Create the environment:
 
-  kubectl apply -f flink-env.yaml
+   ::
 
-Deploy the Flink application:
-::
+     kubectl apply -f flink-env.yaml
 
-  kubectl apply -f flink-app.yaml
+#. Create a new Azure storage account and provision a container on it. Update below blob properties in flink-app.yaml:
+   
+   ::
 
-Application Port forwarding:
-::
+     state.checkpoints.dir: wasbs://<container>@<storage-account>.blob.core.windows.net/checkpoint/
+     fs.azure.account.key.<storage-account>.blob.core.windows.net: <azure-access-key>
 
-  kubectl port-forward svc/<service_name> 8081:8081 -n flink
-  kubectl port-forward svc/flink-app-rest 8081:8081 -n flink
+#. Deploy the Flink application:
+
+   ::
+
+     kubectl apply -f flink-app.yaml
+
+#. Flink Application Port forwarding for accessing the Flink application UI:
+
+   ::
+     
+     kubectl port-forward svc/<service_name> 8081:8081 -n flink
+     kubectl port-forward svc/flink-app-rest 8081:8081 -n flink
 
 
 =========
 Tear Down
 =========
 
-Delete Flink components:
+#. Delete Flink components:
 
-::
+   ::
 
-  kubectl delete -f flink-app.yaml
-  kubectl delete -f flink-env.yaml
-  kubectl delete -f cmfrestclass.yaml
+     kubectl delete -f flink-app.yaml
+     kubectl delete -f flink-env.yaml
+     kubectl delete -f cmfrestclass.yaml
   
-  helm delete  cmf -n confluent
-  helm delete cp-flink-kubernetes-operator -n confluent
+     helm delete  cmf -n confluent
+     helm delete cp-flink-kubernetes-operator -n confluent
   
 
-Delete Confluent Platform components:
-::
-  kubectl delete -f confluent-platform.yaml
-  kubectl delete -f storage-class.yaml
+#. Delete Confluent Platform components:
 
-  helm uninstall confluent-operator -n confluent
+   ::
+
+     kubectl delete -f confluent-platform.yaml
+     kubectl delete -f storage-class.yaml
+
+     helm uninstall confluent-operator -n confluent
   
