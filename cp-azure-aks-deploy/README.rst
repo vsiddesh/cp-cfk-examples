@@ -410,6 +410,13 @@ Create the environment:
 
   kubectl apply -f flink-env.yaml
 
+Create a new Azure storage account and provision a container on it.
+Update blob properties in flink-app.yaml
+::
+
+  state.checkpoints.dir: wasbs://<container>@<storage-account>.blob.core.windows.net/checkpoint/
+  fs.azure.account.key.<storage-account>.blob.core.windows.net: <azure-access-key>
+
 Deploy the Flink application:
 ::
 
