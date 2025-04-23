@@ -313,7 +313,7 @@ Run producer application CLI on Azure VM
 
 Now that we've got the infrastructure set up, let's deploy the producer client.
 
-Install confluent cli utility to create topics and test the production & consumption of messages. 
+#. Install Confluent CLI utility to create topics and test the production & consumption of messages. 
 
 ::
 
@@ -328,19 +328,19 @@ Install confluent cli utility to create topics and test the production & consump
   sudo apt install default-jre
 
       
-Create topics using cli:
+#. Create topics using CLI:
 
 ::
    
    kafka-topics --create --bootstrap-server <NODEIP/HOST>:30000  --topic test-topic
 
-Produce using kafka-console-cli:
+#. Produce using kafka-console-cli:
 
 ::
    
    kafka-console-producer --bootstrap-server <NODEIP/HOST>:30000 --topic test-topic
 
-Consume using kafka-console-cli:
+#. Consume using kafka-console-cli:
 
 ::
    
@@ -369,28 +369,28 @@ Use Control Center to monitor the Confluent Platform, and see the created topic 
 Deploy Flink Operators.
 =======================
 
-Create a namespace or use an existing namespace:
+#. Create a namespace or use an existing namespace:
 
 ::
 
   kubectl create namespace flink
 
-Install the cert-manager
+#. Install the cert-manager
 ::
 
   kubectl create -f https://github.com/jetstack/cert-manager/releases/download/v1.8.2/cert-manager.yaml
   
-Install Flink K8s operator:
+#. Install Flink K8s operator:
 ::
 
   helm upgrade --install cp-flink-kubernetes-operator confluentinc/flink-kubernetes-operator -n confluent -f flink-operator-values.yaml
   
-Install Confluent Manager for Apache Flink K8s operator:
+#. Install Confluent Manager for Apache Flink K8s operator:
 ::
 
   helm upgrade --install cmf confluentinc/confluent-manager-for-apache-flink --namespace confluent
 
-Run kubectl command to check all pods are running - 3 cert-manager pods and two pods for CMF and operator:
+#. Run kubectl command to check all pods are running - 3 cert-manager pods and two pods for CMF and operator:
 ::
 
   kubectl get pods -n confluent
@@ -399,30 +399,30 @@ Run kubectl command to check all pods are running - 3 cert-manager pods and two 
 Deploy Flink Applications
 =========================
 
-Deploy confluent manager for apache flink rest class:
+#. Deploy confluent manager for apache flink rest class:
 
 ::
 
   kubectl apply -f cmfrestclass.yaml
 
-Create the environment:
+#. Create the environment:
 ::
 
   kubectl apply -f flink-env.yaml
 
-Create a new Azure storage account and provision a container on it.
+#. Create a new Azure storage account and provision a container on it.
 Update blob properties in flink-app.yaml
 ::
 
   state.checkpoints.dir: wasbs://<container>@<storage-account>.blob.core.windows.net/checkpoint/
   fs.azure.account.key.<storage-account>.blob.core.windows.net: <azure-access-key>
 
-Deploy the Flink application:
+#. Deploy the Flink application:
 ::
 
   kubectl apply -f flink-app.yaml
 
-Application Port forwarding:
+#. Flink Application Port forwarding for accessing Flink application UI:
 ::
 
   kubectl port-forward svc/<service_name> 8081:8081 -n flink
