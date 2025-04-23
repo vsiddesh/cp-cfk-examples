@@ -208,7 +208,7 @@ H. Confluent Manager for Apache Flink Operator node pool:
 J. Create Flink Job Manager node pool:
 
    ::
-   
+   NOTE: NOT REQUIRED, DELETE THIS NODEPOOL.
      az aks nodepool add \
      --resource-group rg-cp-poc-aks \
      --cluster-name aks-cp-poc  \
