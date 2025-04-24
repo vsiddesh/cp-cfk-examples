@@ -95,7 +95,6 @@ B. Create Kraft node pool:
 C. Create Kafka Broker node pool::
 
    ::
-   
      az aks nodepool add \
      --resource-group rg-cp-poc-aks \
      --cluster-name aks-cp-poc  \
