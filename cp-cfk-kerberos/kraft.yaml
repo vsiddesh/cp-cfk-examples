@@ -132,7 +132,7 @@ spec:
   # externalAccess:
   #   type: loadBalancer
   #   loadBalancer: 
-  #     domain: test.io
+  #     domain: example.com
   podTemplate:
     podSecurityContext:
       fsGroup: 1000
