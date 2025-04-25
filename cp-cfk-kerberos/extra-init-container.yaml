@@ -26,8 +26,4 @@ spec:
         - name: jaas-config-volume
           configMap:
             name: kafka-jaas-configs
-        # - name: kerberos-jaas-custom
-        #   hostPath:
-        #     path: /mnt/jaas
-        #     type: DirectoryOrCreate
         
