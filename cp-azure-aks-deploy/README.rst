@@ -25,12 +25,12 @@ To complete this scenario, you'll follow these steps:
 Create an Azure resource group.
 ==================================
 
-Create a new resource group in the JioAzureWest region and create an AKS cluster with the system Nodepool.
+Create a new resource group in the required region and create an AKS cluster with the system Nodepool.
 
 ::
    
   az login
-  az group create --name rg-cp-poc-aks --location jioindiawest
+  az group create --name rg-cp-poc-aks --location <location>
 
 ==================================
 Deploy Azure AKS with System Nodepool.
@@ -43,7 +43,7 @@ Create an AKS cluster with the system Nodepool.
      az aks create \
      --resource-group rg-cp-poc-aks \
      --name aks-cp-poc  \
-     --location jioindiawest \
+     --location <location> \
      --node-count 2 \
      --node-vm-size Standard_D8ds_v5 \
      --generate-ssh-keys \
