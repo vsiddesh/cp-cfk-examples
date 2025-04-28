@@ -9,9 +9,9 @@ Kerberos Authentication Flow
 * Virtual machine to install Kerberos KDC server.
 * DNS service (AWS Hosted Zones/Azure DNS etc)
 
-## Kerberos Installation Steps
+## Kerberos Installation Steps:
 
-### Step 1: Create Confluent Namespaces
+### Step 1: Add DNS A record for the KDC servers:
 
 ```bash
 Realm: EXAMPLE.COM
@@ -23,6 +23,8 @@ Secondary KDC: kdc02.example.com
 User principal: ubuntu
 
 Admin principal: ubuntu/admin
+
+kdc01.example.com 
 ```
 
 ### Step 2: Install the Kerberos packages
