@@ -24,8 +24,8 @@ User principal: ubuntu
 
 Admin principal: ubuntu/admin
 
-**kdc01.example.com <VM IP>
-(Optional) kdc02.example.com <VM IP>** 
+kdc01.example.com <VM IP>
+(Optional) kdc02.example.com <VM IP>
 ```
 
 ### Step 2: Install the Kerberos packages
@@ -109,7 +109,6 @@ producer@example.com *
 ```bash
 sudo systemctl restart krb5-admin-server.service
 ```
-
 
 ### Step 9: Test created principals
 
