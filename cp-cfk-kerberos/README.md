@@ -62,9 +62,9 @@ Your DNS mappings should be:
 
 ```bash
 kafka.<your-domain> : The EXTERNAL-IP value of kafka-bootstrap-lb service
-b0.<your-domain> : The EXTERNAL-IP value of kafka-0-lb service
-b1.<your-domain> : The EXTERNAL-IP value of kafka-1-lb service
-b2.<your-domain> : The EXTERNAL-IP value of kafka-2-lb service
+broker-0.<your-domain> : The EXTERNAL-IP value of kafka-0-lb service
+broker-1.<your-domain> : The EXTERNAL-IP value of kafka-1-lb service
+broker-2.<your-domain> : The EXTERNAL-IP value of kafka-2-lb service
 controlcenter.<your-domain> : The EXTERNAL-IP value of controlcenter-bootstrap-lb service
 ```
 
@@ -75,9 +75,9 @@ Create PTR records
 ( This is essential for Client Authentication via Kerberos )
 ```bash
 The EXTERNAL-IP value of kafka-bootstrap-lb service : kafka.<your-domain>
-The EXTERNAL-IP value of kafka-0-lb service : b0.<your-domain> 
-The EXTERNAL-IP value of kafka-1-lb service : b1.<your-domain>
-The EXTERNAL-IP value of kafka-2-lb service : b2.<your-domain>
+The EXTERNAL-IP value of kafka-0-lb service : broker-0.<your-domain> 
+The EXTERNAL-IP value of kafka-1-lb service : broker-1.<your-domain>
+The EXTERNAL-IP value of kafka-2-lb service : broker-2.<your-domain>
 ```
 ### Step 9: Validate External Connectivity
 
