@@ -28,14 +28,14 @@ Admin principal: ubuntu/admin
 ### Step 2: Install the Kerberos packages
 
 You will be asked at the end of the install to supply the hostname for the Kerberos and Admin servers for the realm, which may or may not be the same server. 
-Since we are going to create the realm, and thus these servers, type in the full hostname of this server.
+Since we are going to create the realm and these servers, type in the full hostname of this server.
 ```bash
 sudo apt install krb5-kdc krb5-admin-server
 ```
 
 ### Step 3: Create the new realm with the kdb5_newrealm utility:
 
-It will ask you for a database master password, which is used to encrypt the local database. Chose a secure password: its strength is not verified for you.
+It will ask you for a database master password, which is used to encrypt the local database. Choose a secure password: its strength is not verified for you.
 
 ```bash
 sudo krb5_newrealm
@@ -49,7 +49,7 @@ sudo dpkg-reconfigure krb5-kdc
 
 ### Step 6: Create Kerberos Principals & Generate Keytab Files: 
 
-Create admin principal:
+Create an admin principal:
 ```bash
 sudo kadmin.local
 Authenticating as principal root/admin@EXAMPLE.COM with password.
@@ -60,7 +60,7 @@ Re-enter password for principal "ubuntu@EXAMPLE.COM":
 Principal "ubuntu@EXAMPLE.COM" created.
 kadmin.local: quit
 ```
-Create component level principals 
+Create component-level principals: 
 
 broker-0:
 ```bash
@@ -101,7 +101,7 @@ c3@example.com *
 producer@example.com *
 ```
 
-### Step 8: Now restart the krb5-admin-server for the new ACL to take effect:
+### Step 8: Restart the krb5-admin-server for the new ACL to take effect:
 
 ```bash
 sudo systemctl restart krb5-admin-server.service
@@ -113,17 +113,17 @@ sudo systemctl restart krb5-admin-server.service
 The new user principal can be tested using the kinit utility:
 
 ```bash
- kinit ubuntu/admin
+kinit c3@example.com -kt /root/krb/c3.keytab 
 ```
 After entering the password, use the klist utility to view information about the Ticket Granting Ticket (TGT):
 
 ```bash
 klist
-Ticket cache: FILE:/tmp/krb5cc_1000
-Default principal: ubuntu/admin@EXAMPLE.COM
+Ticket cache: FILE:/tmp/krb5cc_0
+Default principal: c3@example.com
 
 Valid starting     Expires            Service principal
-04/03/20 19:16:57  04/04/20 05:16:57  krbtgt/EXAMPLE.COM@EXAMPLE.COM
-     renew until 04/04/20 19:16:55
+04/28/25 03:48:47  04/28/25 13:48:47  krbtgt/example.com@example.com
+	renew until 04/29/25 03:48:47
 ```
 
