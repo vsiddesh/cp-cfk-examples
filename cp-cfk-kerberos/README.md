@@ -1,10 +1,17 @@
 # Confluent Platform Deployment on Kubernetes with External Kerberos Authentication Mode
 
+This repository contains scenario workflows to deploy and manage Confluent on Kubernetes for Kerberos Authentication.
 
+## Prerequisites
+
+* Kerberos , principals, and keytab file.
+* Helm 3 is installed on your local machine
+* Kubectl is installed on your local machine
+* A namespace created in the Kubernetes cluster - `confluent` 
 
 ## Installation Steps
 
-### Step 1: Create Namespaces
+### Step 1: Create Confluent Namespaces
 
 ```bash
 kubectl create namespace confluent
@@ -111,17 +118,12 @@ kubectl create configmap kafka-jaas-configs \
 **Create a configmap for krb5.conf as follows**
 
 ```bash
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: kafka-kerberos-config
-  namespace: confluent
-data:
-  krb5.conf: |
-    <contents of krb5.conf file>
+kubectl create configmap kafka-kerberos-config \
+  --from-file=pod-template.yaml=extra-init-container.yaml \
+  -n confluent
 ```
 
-### Step 12: kubectl create configmap kafka-jaas-configs \
+### Step 12: kubectl create configmap for pod overlays \
 
 ```bash
 kubectl create configmap kafka-pod-overlay \
