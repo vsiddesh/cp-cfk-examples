@@ -87,100 +87,43 @@ client:
 kadmin.local -q "addprinc -randkey producer@example.com"
 kadmin.local -q "ktadd -k /root/krb/producer.keytab -e aes256-cts-hmac-sha1-96:normal producer@example.com"
 ```
-kadmin.local -q "addprinc -randkey kafka/broker-0.example.com@example.com"
 
-### Step 7: Configure DNS for External Access
+### Step 7: Configure ACLS for all the principals:
 
-Once the LoadBalancer services are provisioned, map your DNS entries to the external IPs assigned to each Kafka broker and Control Center instance.
-
-Example DNS mappings (replace `$DOMAIN` with your actual domain):
-
-Assuming the following externalAccess configuration in the CR:
+The new admin principal needs to have the appropriate ACL permissions. 
+The permissions are configured in the /etc/krb5kdc/kadm5.acl file:
 
 ```bash
-externalAccess:
-  type: loadBalancer
-  loadBalancer:
-    domain: <your-domain>
+kafka/broker-0.example.com@example.com *
+kafka/broker-1.example.com@example.com *
+kafka/broker-2.example.com@example.com *
+c3@example.com *
+producer@example.com *
 ```
 
-Your DNS mappings should be:
+### Step 8: Now restart the krb5-admin-server for the new ACL to take effect:
 
 ```bash
-kafka.<your-domain> : The EXTERNAL-IP value of kafka-bootstrap-lb service
-broker-0.<your-domain> : The EXTERNAL-IP value of kafka-0-lb service
-broker-1.<your-domain> : The EXTERNAL-IP value of kafka-1-lb service
-broker-2.<your-domain> : The EXTERNAL-IP value of kafka-2-lb service
-controlcenter.<your-domain> : The EXTERNAL-IP value of controlcenter-bootstrap-lb service
+sudo systemctl restart krb5-admin-server.service
 ```
 
-Ensure these DNS entries are resolvable by external clients
 
-### Step 8: Create a Reverse DNS Zone 
-Create PTR records
-( This is essential for Client Authentication via Kerberos )
-```bash
-The EXTERNAL-IP value of kafka-bootstrap-lb service : kafka.<your-domain>
-The EXTERNAL-IP value of kafka-0-lb service : broker-0.<your-domain> 
-The EXTERNAL-IP value of kafka-1-lb service : broker-1.<your-domain>
-The EXTERNAL-IP value of kafka-2-lb service : broker-2.<your-domain>
-```
-### Step 9: Validate External Connectivity
+### Step 9: Test created principals
 
-Verify DNS resolution:
-```bash
-nslookup kafka.<your-domain>
-```
----
-### Step 10:  Create Keytab secret
-
-**Keytab for Kafka Brokers**
-Note: Refer to kerberos-setup.readme for generating the keytab
+The new user principal can be tested using the kinit utility:
 
 ```bash
-kubectl create secret generic kafka-keytab-secret \
-  --from-file=kafka-keytab=kafka.keytab \
-  -n confluent
+ kinit ubuntu/admin
 ```
-
-**Keytab for Control Center**
-```bash
-kubectl create secret generic c3-keytab-secret \
-  --from-file=c3-keytab=c3.keytab \
-  -n confluent
-```
-
-### Step 11: Create Configmaps 
-
-**Create a shared configmap for kafka-jaas-configs**
-```bash
-kubectl create configmap kafka-jaas-configs \
-  --from-file=broker-0-jaas.conf=./jaas/broker-0-jaas.conf \
-  --from-file=broker-1-jaas.conf=./jaas/broker-1-jaas.conf \
-  --from-file=broker-2-jaas.conf=./jaas/broker-2-jaas.conf \
-  -n confluent
-```
-
-** Update kerberos_conf.yaml and apply the yaml to provision krb5.conf configmap.**
+After entering the password, use the klist utility to view information about the Ticket Granting Ticket (TGT):
 
 ```bash
-kubectl apply -f kerberos_conf.yaml
+klist
+Ticket cache: FILE:/tmp/krb5cc_1000
+Default principal: ubuntu/admin@EXAMPLE.COM
+
+Valid starting     Expires            Service principal
+04/03/20 19:16:57  04/04/20 05:16:57  krbtgt/EXAMPLE.COM@EXAMPLE.COM
+     renew until 04/04/20 19:16:55
 ```
 
-### Step 12: kubectl create configmap for pod overlays \
-
-```bash
-kubectl create configmap kafka-pod-overlay \
-  --from-file=pod-template.yaml=extra-init-container.yaml \
-  -n confluent
-```
-
-### Step 13: Deploy Confluent Platform Components
-
-**Update all the placeholders in kraft.yaml**
-- \<your-domain>
-
-Apply your platform configuration for KRaft mode:
-```bash
-kubectl apply -f kraft.yaml
-```
