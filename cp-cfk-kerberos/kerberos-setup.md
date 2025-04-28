@@ -14,7 +14,7 @@ Kerberos Authentication Flow
 ### Step 1: Add DNS A record for the KDC servers:
 
 ```bash
-Realm: EXAMPLE.COM
+Realm: example.com
 
 Primary KDC: kdc01.example.com
 
@@ -55,12 +55,12 @@ sudo dpkg-reconfigure krb5-kdc
 Create an admin principal:
 ```bash
 sudo kadmin.local
-Authenticating as principal root/admin@EXAMPLE.COM with password.
+Authenticating as principal root/admin@example.com with password.
 kadmin.local: addprinc ubuntu
-WARNING: no policy specified for ubuntu@EXAMPLE.COM; defaulting to no policy
-Enter password for principal "ubuntu@EXAMPLE.COM": 
-Re-enter password for principal "ubuntu@EXAMPLE.COM": 
-Principal "ubuntu@EXAMPLE.COM" created.
+WARNING: no policy specified for ubuntu@example.com; defaulting to no policy
+Enter password for principal "ubuntu@example.com": 
+Re-enter password for principal "ubuntu@example.com": 
+Principal "ubuntu@example.com" created.
 kadmin.local: quit
 ```
 Create component-level principals: 
