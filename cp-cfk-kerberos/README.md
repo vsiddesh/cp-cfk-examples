@@ -115,12 +115,10 @@ kubectl create configmap kafka-jaas-configs \
   -n confluent
 ```
 
-**Create a configmap for krb5.conf as follows**
+** Update kerberos_conf.yaml and apply the yaml to provision krb5.conf configmap.**
 
 ```bash
-kubectl create configmap kafka-kerberos-config \
-  --from-file=pod-template.yaml=extra-init-container.yaml \
-  -n confluent
+kubectl apply -f kerberos_conf.yaml
 ```
 
 ### Step 12: kubectl create configmap for pod overlays \
@@ -133,7 +131,7 @@ kubectl create configmap kafka-pod-overlay \
 
 ### Step 13: Deploy Confluent Platform Components
 
-**Update all the placeholders in main.yaml**
+**Update all the placeholders in kraft.yaml**
 - \<your-domain>
 
 Apply your platform configuration for KRaft mode:
