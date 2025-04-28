@@ -24,7 +24,8 @@ User principal: ubuntu
 
 Admin principal: ubuntu/admin
 
-kdc01.example.com 
+**kdc01.example.com <VM IP>
+(Optional) kdc02.example.com <VM IP>** 
 ```
 
 ### Step 2: Install the Kerberos packages
