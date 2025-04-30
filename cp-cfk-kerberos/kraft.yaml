@@ -1,0 +1,140 @@
+apiVersion: platform.confluent.io/v1beta1
+kind: KRaftController
+metadata:
+  name: kraftcontroller
+  namespace: confluent
+spec:
+  dataVolumeCapacity: 50G
+  image:
+    application: docker.io/confluentinc/cp-server:7.9.0
+    init: confluentinc/confluent-init-container:2.11.0
+  replicas: 3
+  # oneReplicaPerNode: true
+  # storageClass:
+  #     name: local-storage
+  podTemplate:
+    podSecurityContext:
+      fsGroup: 1000
+      runAsUser: 1000
+      runAsNonRoot: true
+---
+apiVersion: platform.confluent.io/v1beta1
+kind: Kafka
+metadata:
+  name: kafka
+  namespace: confluent
+  annotations:
+    platform.confluent.io/force-reconcile: "true"
+    platform.confluent.io/pod-overlay-configmap-name: "kafka-pod-overlay"
+spec:
+  dependencies:
+    kRaftController:
+      clusterRef:
+        name: kraftcontroller
+  dataVolumeCapacity: 130G
+  listeners:
+    external:
+      externalAccess:
+        type: loadBalancer
+        loadBalancer:
+          domain: example.com
+          brokerPrefix: broker-
+  configOverrides:
+    server:
+      - sasl.enabled.mechanisms=GSSAPI
+      - sasl.mechanism.inter.broker.protocol=PLAINTEXT
+      - listener.security.protocol.map=INTERNAL:PLAINTEXT,EXTERNAL:SASL_PLAINTEXT,REPLICATION:PLAINTEXT,CONTROLLER:PLAINTEXT
+      - listeners=INTERNAL://:9071,EXTERNAL://:9092,REPLICATION://:9072
+      - sasl.kerberos.service.name=kafka
+
+    jvm:
+      - -Dsun.security.krb5.debug=true
+      - -Djava.security.auth.login.config=/mnt/jaas/broker-jaas.conf
+      - -Djava.security.krb5.conf=/mnt/kerberos/krb5.conf
+  mountedVolumes:
+    volumes:
+      - name: kerberos-config
+        configMap:
+          name: kafka-kerberos-config
+      - name: kerberos-secret
+        secret:
+          secretName: kafka-keytab-secret
+      - name: kerberos-jaas
+        emptyDir: {}
+    volumeMounts:
+      - name: kerberos-config
+        mountPath: /mnt/kerberos
+        readOnly: true
+      - name: kerberos-secret
+        mountPath: /mnt/kerberos/kafka.keytab
+        readOnly: false
+      - name: kerberos-jaas
+        mountPath: /mnt/jaas/
+        readOnly: false
+  image:
+    application: docker.io/confluentinc/cp-server:7.9.0
+    init: confluentinc/confluent-init-container:2.11.0
+  replicas: 3
+  # oneReplicaPerNode: true
+  podTemplate:
+    annotations:
+       kafkacluster-manual-roll: "10"
+    podSecurityContext:
+      fsGroup: 1000
+      runAsUser: 1000
+      runAsNonRoot: true
+---
+apiVersion: platform.confluent.io/v1beta1
+kind: ControlCenter
+metadata:
+  name: controlcenter
+  namespace: confluent
+spec:
+  replicas: 1
+  # oneReplicaPerNode: true
+  image:
+    application: confluentinc/cp-enterprise-control-center:7.6.0
+    init: confluentinc/confluent-init-container:2.8.0
+  dataVolumeCapacity: 100Gi
+  configOverrides:
+      server:
+      - confluent.controlcenter.streams.sasl.mechanism=GSSAPI
+      - confluent.controlcenter.streams.security.protocol=SASL_PLAINTEXT
+      - confluent.controlcenter.streams.sasl.kerberos.service.name=kafka
+      - confluent.controlcenter.streams.sasl.jaas.config=com.sun.security.auth.module.Krb5LoginModule required useKeyTab=true storeKey=true keyTab="/mnt/kerberos/c3-keytab/c3.keytab" principal="c3@example.com";
+      - confluent.metrics.reporter.sasl.mechanism=GSSAPI
+      - confluent.metrics.reporter.security.protocol=SASL_SSL
+      - confluent.metrics.reporter.sasl.kerberos.service.name=kafka
+      - confluent.metrics.reporter.sasl.jaas.config=com.sun.security.auth.module.Krb5LoginModule required useKeyTab=true storeKey=true keyTab="/mnt/kerberos/c3-keytab/c3.keytab" principal="c3@example.com";
+      - confluent.controlcenter.schema.registry.enable=false
+
+      jvm:
+      - -Dsun.security.krb5.debug=true
+      - -Djava.security.krb5.conf=/mnt/kerberos/krb5.conf
+  mountedVolumes:
+    volumes:
+      - name: kerberos-c3-secret
+        secret:
+          secretName: c3-keytab-secret
+      - name: kerberos-config
+        configMap:
+          name: kafka-kerberos-config
+    volumeMounts:
+      - name: kerberos-c3-secret
+        mountPath: /mnt/kerberos/c3-keytab
+        readOnly: true
+      - name: kerberos-config
+        mountPath: /mnt/kerberos
+        readOnly: true
+  dependencies:
+    kafka:
+      bootstrapEndpoint: broker-1.example.com:9092
+  # externalAccess:
+  #   type: loadBalancer
+  #   loadBalancer: 
+  #     domain: example.com
+  podTemplate:
+    podSecurityContext:
+      fsGroup: 1000
+      runAsUser: 1000
+      runAsNonRoot: true
